@@ -1,0 +1,34 @@
+[package]
+name = "esp-template"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+defmt = "0.3"
+defmt-rtt = "0.4"
+riscv = "0.13"
+static_cell = "2.1"
+
+[dependencies.embassy-executor]
+version = "0.7"
+features = ["defmt", "nightly"]
+
+[dependencies.embassy-time]
+version = "0.4"
+features = ["defmt-timestamp-uptime-us"]
+
+[dependencies.esp-backtrace]
+version = "0.15"
+features = ["esp32c6", "defmt", "exception-handler"]
+
+[dependencies.esp-hal]
+version = "0.23"
+features = ["esp32c6", "defmt", "unstable"]
+
+[dependencies.esp-hal-embassy]
+version = "0.6"
+features = ["esp32c6", "defmt"]
+
+[dependencies.heapless]
+version = "0.8"
+features = ["defmt-03"]

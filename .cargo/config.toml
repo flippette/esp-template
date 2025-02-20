@@ -1,0 +1,36 @@
+[unstable]
+build-std = ["core", "panic_abort"]
+build-std-features = ["optimize_for_size"]
+
+[build]
+target = "riscv32imac-unknown-none-elf"
+
+[target.riscv32imac-unknown-none-elf]
+runner = [
+  "probe-rs",
+  "run",
+  "--chip",
+  "esp32c6",
+  "--speed",
+  "24000",
+  "--log-format",
+  "{t:>10:dimmed} {c:>15:dimmed} {L:>5:bold} {s}",
+]
+rustflags = [
+  "-Cforce-frame-pointers=yes",
+  "-Clink-arg=--nmagic",
+  "-Clink-arg=-Tdefmt.x",
+  "-Clink-arg=-Tlinkall.x",
+]
+
+[env]
+DEFMT_LOG = "info"
+DEFMT_RTT_BUFFER_SIZE = "4096"
+
+[profile.release]
+opt-level = "z"
+codegen-units = 1
+panic = "abort"
+strip = false
+debug = 2
+lto = true
