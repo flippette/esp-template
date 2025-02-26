@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-#![feature(generic_arg_infer, impl_trait_in_assoc_type, impl_trait_in_bindings)]
+#![feature(impl_trait_in_assoc_type, impl_trait_in_bindings)]
 #![expect(unstable_features)]
 
 mod error;
@@ -9,14 +9,15 @@ mod rt;
 
 use defmt::info;
 use embassy_executor::Spawner;
-use error::Report;
+use error::Error;
 use esp_backtrace as _;
 use esp_hal::timer::systimer::SystemTimer;
 use esp_println as _;
 
-async fn main(_s: Spawner) -> Result<(), Report<8>> {
+async fn main(_s: Spawner) -> Result<(), Error> {
     let p = esp_hal::init(<_>::default());
-    esp_hal_embassy::init(SystemTimer::new(p.SYSTIMER).alarm0);
+    let syst = SystemTimer::new(p.SYSTIMER);
+    esp_hal_embassy::init(syst.alarm0);
     info!("HAL init!");
 
     Ok(())
