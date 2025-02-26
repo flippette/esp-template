@@ -5,7 +5,6 @@ edition = "2024"
 
 [dependencies]
 defmt = "0.3"
-riscv = "0.13"
 static_cell = "2.1"
 
 [dependencies.embassy-executor]
@@ -18,7 +17,7 @@ features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
 version = "0.15"
-features = ["esp32c6", "defmt", "exception-handler"]
+features = ["esp32c6", "defmt", "exception-handler", "panic-handler"]
 
 [dependencies.esp-hal]
 version = "1.0.0-beta.0"
@@ -31,7 +30,3 @@ features = ["esp32c6", "defmt"]
 [dependencies.esp-println]
 version = "0.13"
 features = ["esp32c6", "defmt-espflash"]
-
-[dependencies.heapless]
-version = "0.8"
-features = ["defmt-03"]
