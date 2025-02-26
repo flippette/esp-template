@@ -6,16 +6,7 @@ build-std-features = ["optimize_for_size"]
 target = "riscv32imac-unknown-none-elf"
 
 [target.riscv32imac-unknown-none-elf]
-runner = [
-  "probe-rs",
-  "run",
-  "--chip",
-  "esp32c6",
-  "--speed",
-  "24000",
-  "--log-format",
-  "{t:>10:dimmed} {c:>15:dimmed} {L:>5:bold} {s}",
-]
+runner = "espflash flash -B 921600 -M -L defmt"
 rustflags = [
   "-Cforce-frame-pointers=yes",
   "-Clink-arg=--nmagic",
@@ -25,7 +16,6 @@ rustflags = [
 
 [env]
 DEFMT_LOG = "info"
-DEFMT_RTT_BUFFER_SIZE = "4096"
 
 [profile.release]
 opt-level = "z"

@@ -8,11 +8,11 @@ mod macros;
 mod rt;
 
 use defmt::info;
-use defmt_rtt as _;
 use embassy_executor::Spawner;
 use error::Report;
 use esp_backtrace as _;
 use esp_hal::timer::systimer::SystemTimer;
+use esp_println as _;
 
 async fn main(_s: Spawner) -> Result<(), Report<8>> {
     let p = esp_hal::init(<_>::default());

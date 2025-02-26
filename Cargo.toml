@@ -5,7 +5,6 @@ edition = "2024"
 
 [dependencies]
 defmt = "0.3"
-defmt-rtt = "0.4"
 riscv = "0.13"
 static_cell = "2.1"
 
@@ -22,12 +21,16 @@ version = "0.15"
 features = ["esp32c6", "defmt", "exception-handler"]
 
 [dependencies.esp-hal]
-version = "0.23"
+version = "1.0.0-beta.0"
 features = ["esp32c6", "defmt", "unstable"]
 
 [dependencies.esp-hal-embassy]
-version = "0.6"
+version = "0.7"
 features = ["esp32c6", "defmt"]
+
+[dependencies.esp-println]
+version = "0.13"
+features = ["esp32c6", "defmt-espflash"]
 
 [dependencies.heapless]
 version = "0.8"
