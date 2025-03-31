@@ -1,6 +1,5 @@
 //! Error handling facilities.
 
-use defmt::Str;
 use embassy_executor::SpawnError;
 
 crate::error_def! {
