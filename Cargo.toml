@@ -16,7 +16,7 @@ version = "0.4"
 features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
-version = "0.15"
+version = "0.16"
 features = ["esp32c6", "defmt", "exception-handler", "panic-handler"]
 
 [dependencies.esp-hal]
@@ -24,9 +24,9 @@ version = "1.0.0-beta.0"
 features = ["esp32c6", "defmt", "unstable"]
 
 [dependencies.esp-hal-embassy]
-version = "0.7"
+version = "0.8"
 features = ["esp32c6", "defmt"]
 
 [dependencies.esp-println]
-version = "0.13"
+version = "0.14"
 features = ["esp32c6", "defmt-espflash"]
