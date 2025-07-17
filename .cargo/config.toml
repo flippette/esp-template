@@ -19,12 +19,15 @@ rustflags = [
 DEFMT_LOG = "info"
 
 [profile.dev]
+opt-level = "z"
 codegen-backend = "llvm"
+debug = "line-tables-only"
+
 [profile.release]
 opt-level = "z"
 codegen-units = 1
 codegen-backend = "llvm"
 panic = "abort"
 strip = false
-debug = 2
+debug = "line-tables-only"
 lto = true
