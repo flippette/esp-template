@@ -1,6 +1,7 @@
 [unstable]
 build-std = ["core", "panic_abort"]
 build-std-features = ["optimize_for_size"]
+codegen-backend = true
 
 [build]
 target = "riscv32imac-unknown-none-elf"
@@ -17,9 +18,12 @@ rustflags = [
 [env]
 DEFMT_LOG = "info"
 
+[profile.dev]
+codegen-backend = "llvm"
 [profile.release]
 opt-level = "z"
 codegen-units = 1
+codegen-backend = "llvm"
 panic = "abort"
 strip = false
 debug = 2
