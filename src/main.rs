@@ -19,7 +19,7 @@ async fn main(_s: Spawner) -> Result<(), Error> {
   let p = esp_hal::init(<_>::default());
   let syst = SystemTimer::new(p.SYSTIMER);
   esp_hal_embassy::init(syst.alarm0);
-  info!("HAL init!");
+  info!("hal init!");
 
   Ok(())
 }
