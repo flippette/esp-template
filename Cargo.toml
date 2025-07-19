@@ -17,7 +17,12 @@ features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
 version = "0.17"
-features = ["esp32c6", "defmt", "exception-handler", "panic-handler"]
+features = [
+  "esp32c6",
+  "defmt",
+  "exception-handler",
+  "panic-handler",
+]
 
 [dependencies.esp-hal]
 version = "1.0.0-rc.0"
