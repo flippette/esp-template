@@ -1,52 +1,60 @@
 //! helper macros.
 
-// TODO: this should ultimately be a derive macro.
-/// define an error enum in the current scope.
+/// impl `From` and [`defmt::Format`] for an error enum.
+///
+/// functions that want to return `Result<_, ()>::Err` should instead define a
+/// dedicated error type, then add it as a variant to the error enum; that way,
+/// you avoid implementing `From<()>` twice for the error enum.
+///
+/// unfortunately, you can't put any attributes on variants (including doc
+/// comments) other than `#[format(_)]`; this restriction may be lifted if the
+/// macro is converted to be a proc macro in the future.
 #[macro_export]
-macro_rules! error_def {
-  ($($variant:ident => $inner:ty = $msg:expr),+ $(,)?) => {
-    #[derive(Clone)]
-    pub enum Error {
-      $($variant($inner)),+
+macro_rules! error {
+  (
+    $(#[$attr:meta])*
+    $vis:vis enum $name:ident {
+      $(
+        $(#[format($format:ident)])?
+        $var:ident ($from:ty) => $fmt:tt
+      ),* $(,)?
+    }
+  ) => {
+    $(#[$attr])*
+    $vis enum $name {
+      $($var($from)),*
     }
 
     $(
-      impl ::core::convert::From<$inner> for Error {
-        fn from(inner: $inner) -> Self {
-          Self::$variant(inner)
+      impl ::core::convert::From<$from> for $name {
+        fn from(inner: $from) -> Self {
+          Self::$var(inner)
         }
       }
-    )+
+    )*
 
-    impl ::defmt::Format for Error {
-      fn format(&self, fmt: ::defmt::Formatter<'_>) {
-        $crate::error_def! {
-          __private self, fmt => $($variant => $inner => $msg;)+
+    impl ::defmt::Format for $name {
+      fn format(&self, f: ::defmt::Formatter<'_>) {
+        match self {
+          $(Self::$var(inner) => $crate::error!(@priv @format_impl
+            $(#[format($format)])? $var(inner) => f, $fmt)),*
         }
       }
     }
   };
 
-  (__private $self:expr, $fmt:expr =>) => {};
-  (__private $self:expr, $fmt:expr =>
-    $variant:ident => $inner:ty => $msg:literal; $($tail:tt)*) =>
-  {
-    $crate::error_def! {
-      __private $self, $fmt =>
-        $variant => $inner => |fmt, inner| ::defmt::write!(fmt, $msg, inner);
-      $($tail)*
-    }
-  };
-  (__private $self:expr, $fmt:expr =>
-    $variant:ident => $inner:ty => $msg:expr; $($tail:tt)*) =>
-  {
-    if let Self::$variant(inner) = $self {
-      let f: impl Fn(::defmt::Formatter<'_>, &$inner) = $msg;
-      return f($fmt, inner);
-    }
-
-    $crate::error_def! { __private $self, $fmt => $($tail)* }
-  };
+  // format string with one argument
+  (@priv @format_impl
+    $var:ident ($inner:expr) => $w:expr, $fmt:literal $(,)?
+  ) => { ::defmt::write!($w, $fmt, $inner) };
+  // format string with no arguments
+  (@priv @format_impl
+    #[format(lit)] $var:ident ($inner:expr) => $w:expr, $msg:literal $(,)?
+  ) => { ::defmt::write!($w, $msg) };
+  // format function (impl Fn(::defmt::Formatter<'_>, $inner) -> ())
+  (@priv @format_impl
+    #[format(fun)] $var:ident ($inner:expr) => $w:expr, $fmt:expr $(,)?
+  ) => { $fmt($w, $inner) };
 }
 
 /// get a `&'static mut T`.
