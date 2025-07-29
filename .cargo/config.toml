@@ -4,8 +4,10 @@ build-std-features = ["optimize_for_size"]
 codegen-backend = true
 
 [build]
+# target = "riscv32imc-unknown-none-elf"
 target = "riscv32imac-unknown-none-elf"
 
+# [target.riscv32imc-unknown-none-elf]
 [target.riscv32imac-unknown-none-elf]
 runner = "espflash flash -B 115200 -M -L defmt"
 rustflags = [

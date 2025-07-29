@@ -18,6 +18,7 @@ features = ["defmt-timestamp-uptime-us"]
 [dependencies.esp-backtrace]
 version = "0.17"
 features = [
+  # "esp32c3",
   "esp32c6",
   "defmt",
   "exception-handler",
@@ -26,12 +27,25 @@ features = [
 
 [dependencies.esp-hal]
 version = "1.0.0-rc.0"
-features = ["esp32c6", "defmt", "unstable"]
+features = [
+  # "esp32c3",
+  "esp32c6",
+  "defmt",
+  "unstable",
+]
 
 [dependencies.esp-hal-embassy]
 version = "0.9"
-features = ["esp32c6", "defmt"]
+features = [
+  # "esp32c3",
+  "esp32c6",
+  "defmt",
+]
 
 [dependencies.esp-println]
 version = "0.15"
-features = ["esp32c6", "defmt-espflash"]
+features = [
+  # "esp32c3",
+  "esp32c6",
+  "defmt-espflash",
+]
