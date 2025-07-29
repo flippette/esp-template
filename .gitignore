@@ -1,3 +1,6 @@
-/target
-.envrc
-Cargo.lock
+# personal env
+/.envrc
+
+# build artifacts
+/target/
+/result
