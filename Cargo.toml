@@ -25,6 +25,14 @@ features = [
   "panic-handler",
 ]
 
+[dependencies.esp-bootloader-esp-idf]
+version = "0.2"
+features = [
+  # "esp32c3",
+  "esp32c6",
+  "defmt",
+]
+
 [dependencies.esp-hal]
 version = "1.0.0-rc.0"
 features = [
