@@ -16,13 +16,9 @@
         pkgs = import nixpkgs { inherit system overlays; };
         rustBin = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
         craneLib = (crane.mkLib pkgs).overrideToolchain rustBin;
-        rustTools = with pkgs; [ cargo-binutils cargo-bloat espflash ];
-      in with pkgs; {
-        devShells.default = mkShell { buildInputs = rustTools ++ [ rustBin ]; };
-        packages.default = craneLib.buildPackage {
-          pname = "esp-template";
-          version = "0.1.0";
 
+        # common args to both deps & package
+        commonArgs = rec {
           src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
@@ -40,5 +36,25 @@
 
           doCheck = false;
         };
+
+        # build dependencies separately
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+      in with pkgs; {
+        devShells.default = mkShell {
+          buildInputs = [ cargo-binutils cargo-bloat espflash rustBin ];
+        };
+        packages.default = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
+
+          buildInputs = [ espflash ];
+
+          postInstall = ''
+            # generate a flat firmware binary (for OTA, etc.)
+            ${espflash}/bin/espflash save-image \
+              --chip esp32c6 \
+              $out/bin/$pname \
+              $out/bin/$pname-$version.bin
+          '';
+        });
       });
 }
