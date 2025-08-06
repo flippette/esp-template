@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-defmt = "1.0"
-static_cell = "2.1"
+defmt = "1"
+static_cell = "2"
 
 [dependencies.embassy-executor]
 version = "0.7"
