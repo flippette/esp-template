@@ -4,12 +4,11 @@ build-std-features = ["optimize_for_size"]
 codegen-backend = true
 
 [build]
-# target = "riscv32imc-unknown-none-elf"
-target = "riscv32imac-unknown-none-elf"
+# target = "riscv32imc-unknown-none-elf" # esp32c3
+target = "riscv32imac-unknown-none-elf" # esp32c6
 
-# [target.riscv32imc-unknown-none-elf]
-[target.riscv32imac-unknown-none-elf]
-runner = "espflash flash -B 115200 -M -L defmt"
+[target.'cfg(all(target_arch = "riscv32", target_os = "none"))']
+runner = "espflash flash -B 921600 -M -L defmt"
 rustflags = [
   "-Cforce-frame-pointers=yes",
   "-Clink-arg=--nmagic",

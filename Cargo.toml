@@ -3,6 +3,23 @@ name = "esp-template"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = ["esp32c6"]
+esp32c3 = [
+  "esp-backtrace/esp32c3",
+  "esp-bootloader-esp-idf/esp32c3",
+  "esp-hal/esp32c3",
+  "esp-hal-embassy/esp32c3",
+  "esp-println/esp32c3",
+]
+esp32c6 = [
+  "esp-backtrace/esp32c6",
+  "esp-bootloader-esp-idf/esp32c6",
+  "esp-hal/esp32c6",
+  "esp-hal-embassy/esp32c6",
+  "esp-println/esp32c6",
+]
+
 [dependencies]
 defmt = "1"
 static_cell = "2"
@@ -18,8 +35,6 @@ features = ["defmt-timestamp-uptime-us"]
 [dependencies.esp-backtrace]
 version = "0.17"
 features = [
-  # "esp32c3",
-  "esp32c6",
   "defmt",
   "exception-handler",
   "panic-handler",
@@ -27,33 +42,16 @@ features = [
 
 [dependencies.esp-bootloader-esp-idf]
 version = "0.2"
-features = [
-  # "esp32c3",
-  "esp32c6",
-  "defmt",
-]
+features = ["defmt"]
 
 [dependencies.esp-hal]
 version = "1.0.0-rc.0"
-features = [
-  # "esp32c3",
-  "esp32c6",
-  "defmt",
-  "unstable",
-]
+features = ["defmt", "unstable"]
 
 [dependencies.esp-hal-embassy]
 version = "0.9"
-features = [
-  # "esp32c3",
-  "esp32c6",
-  "defmt",
-]
+features = ["defmt"]
 
 [dependencies.esp-println]
 version = "0.15"
-features = [
-  # "esp32c3",
-  "esp32c6",
-  "defmt-espflash",
-]
+features = ["defmt-espflash"]

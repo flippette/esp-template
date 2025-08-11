@@ -43,18 +43,7 @@
         devShells.default = mkShell {
           buildInputs = [ cargo-binutils cargo-bloat espflash rustBin ];
         };
-        packages.default = craneLib.buildPackage (commonArgs // {
-          inherit cargoArtifacts;
-
-          buildInputs = [ espflash ];
-
-          postInstall = ''
-            # generate a flat firmware binary (for OTA, etc.)
-            ${espflash}/bin/espflash save-image \
-              --chip esp32c6 \
-              $out/bin/$pname \
-              $out/bin/$pname-$version.bin
-          '';
-        });
+        packages.default =
+          craneLib.buildPackage (commonArgs // { inherit cargoArtifacts; });
       });
 }
