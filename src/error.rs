@@ -3,7 +3,7 @@
 use defmt::Str;
 use embassy_executor::SpawnError;
 
-crate::error! {
+crate::macros::error! {
   /// common error type.
   #[derive(Clone)]
   pub enum Error {

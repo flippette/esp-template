@@ -9,7 +9,6 @@
 /// unfortunately, you can't put any attributes on variants (including doc
 /// comments) other than `#[format(_)]`; this restriction may be lifted if the
 /// macro is converted to be a proc macro in the future.
-#[macro_export]
 macro_rules! error {
   (
     $(#[$attr:meta])*
@@ -36,7 +35,7 @@ macro_rules! error {
     impl ::defmt::Format for $name {
       fn format(&self, f: ::defmt::Formatter<'_>) {
         match self {
-          $(Self::$var(inner) => $crate::error!(@priv @format_impl
+          $(Self::$var(inner) => $crate::macros::error!(@priv @format_impl
             $(#[format($format)])? $var(inner) => f, $fmt)),*
         }
       }
@@ -58,7 +57,6 @@ macro_rules! error {
 }
 
 /// get a `&'static mut T`.
-#[macro_export]
 macro_rules! make_static {
   // runtime-init
   ($(#[$m:meta])* $type:ty = $val:expr) => {{
@@ -76,3 +74,5 @@ macro_rules! make_static {
     __CELL.take()
   }};
 }
+
+pub(crate) use {error, make_static};

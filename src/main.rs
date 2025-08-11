@@ -4,7 +4,6 @@
 #![expect(unstable_features)]
 
 mod error;
-#[doc(hidden)]
 mod macros;
 mod rt;
 
