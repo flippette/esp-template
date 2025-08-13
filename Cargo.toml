@@ -10,15 +10,22 @@ esp32c3 = [
   "esp-bootloader-esp-idf/esp32c3",
   "esp-hal/esp32c3",
   "esp-hal-embassy/esp32c3",
+  "esp-mbedtls?/esp32c3",
   "esp-println/esp32c3",
+  "esp-wifi?/esp32c3",
 ]
 esp32c6 = [
   "esp-backtrace/esp32c6",
   "esp-bootloader-esp-idf/esp32c6",
   "esp-hal/esp32c6",
   "esp-hal-embassy/esp32c6",
+  "esp-mbedtls?/esp32c6",
   "esp-println/esp32c6",
+  "esp-wifi?/esp32c6",
 ]
+mbedtls = ["dep:esp-mbedtls", "wifi"]
+net = ["dep:embassy-net", "wifi"]
+wifi = ["dep:esp-alloc", "dep:esp-wifi"]
 
 [dependencies]
 defmt = "1"
@@ -28,9 +35,19 @@ static_cell = "2"
 version = "0.7"
 features = ["defmt", "nightly"]
 
+[dependencies.embassy-net]
+version = "0.7"
+features = ["defmt", "dhcpv4", "dns", "tcp"]
+optional = true
+
 [dependencies.embassy-time]
 version = "0.4"
 features = ["defmt-timestamp-uptime-us"]
+
+[dependencies.esp-alloc]
+version = "0.8"
+features = ["defmt", "nightly"]
+optional = true
 
 [dependencies.esp-backtrace]
 version = "0.17"
@@ -52,6 +69,18 @@ features = ["defmt", "unstable"]
 version = "0.9"
 features = ["defmt"]
 
+[dependencies.esp-mbedtls]
+git = "https://github.com/esp-rs/esp-mbedtls.git"
+optional = true
+
 [dependencies.esp-println]
 version = "0.15"
 features = ["defmt-espflash"]
+
+[dependencies.esp-wifi]
+version = "0.15"
+features = ["defmt", "wifi"]
+optional = true
+
+[patch."https://github.com/esp-rs/esp-mbedtls.git"]
+esp-mbedtls.git = "https://github.com/larsfronius/esp-mbedtls.git"
