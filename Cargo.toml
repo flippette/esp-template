@@ -71,6 +71,7 @@ features = ["defmt"]
 
 [dependencies.esp-mbedtls]
 git = "https://github.com/esp-rs/esp-mbedtls.git"
+rev = "35e8ccd5999cf0c831c9b825491fd68581d108c2"
 optional = true
 
 [dependencies.esp-println]
@@ -81,6 +82,3 @@ features = ["defmt-espflash"]
 version = "0.15"
 features = ["defmt", "wifi"]
 optional = true
-
-[patch."https://github.com/esp-rs/esp-mbedtls.git"]
-esp-mbedtls.git = "https://github.com/larsfronius/esp-mbedtls.git"

@@ -992,7 +992,7 @@ dependencies = [
 [[package]]
 name = "esp-mbedtls"
 version = "0.1.0"
-source = "git+https://github.com/larsfronius/esp-mbedtls.git#e5d23076500fd4b87508ebed3dc48c3182ecbd46"
+source = "git+https://github.com/esp-rs/esp-mbedtls.git?rev=35e8ccd5999cf0c831c9b825491fd68581d108c2#35e8ccd5999cf0c831c9b825491fd68581d108c2"
 dependencies = [
  "cfg-if",
  "critical-section",
@@ -1011,7 +1011,7 @@ dependencies = [
 [[package]]
 name = "esp-mbedtls-sys"
 version = "0.1.0"
-source = "git+https://github.com/larsfronius/esp-mbedtls.git#e5d23076500fd4b87508ebed3dc48c3182ecbd46"
+source = "git+https://github.com/esp-rs/esp-mbedtls.git?rev=35e8ccd5999cf0c831c9b825491fd68581d108c2#35e8ccd5999cf0c831c9b825491fd68581d108c2"
 dependencies = [
  "anyhow",
  "bindgen",
