@@ -26,7 +26,9 @@ ESP_HAL_CONFIG_FLIP_LINK = "true" # esp32c6
 [profile.dev]
 opt-level = "s"
 codegen-backend = "llvm"
-debug = "line-tables-only"
+panic = "abort"
+strip = false
+debug = true
 
 [profile.release]
 opt-level = "s"
