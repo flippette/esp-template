@@ -20,15 +20,13 @@ besides target support, this template has a few more options:
 
 `Cargo.toml` features:
 
-- `net`: enables Wi-Fi and networking support.
-  - you must enable building the `alloc` crate in `.cargo/config.toml`!
-- `mbedtls`: enables TLS support using `esp-mbedtls`.
-  - you must enable building the `alloc` crate in `.cargo/config.toml`!
+- `net`: enables Wi-Fi and networking support. (requires `alloc` in `build-std`)
+- `mbedtls`: enables TLS support using `esp-mbedtls`. (requires `alloc` in `build-std`)
 
 `.cargo/config.toml` options:
 
-- `build-std`: building the `alloc` crate is optional, but must be done when
-  enabling the `net` and/or `mbedtls` Cargo features.
+- `build-std`: building the `alloc` crate is optional, but is required for
+  certain crate features; disabling this makes cold builds _slightly_ faster.
 - `build-std-features`: the `panic_immediate_abort` standard library feature is
   optional, and saves some flash space if you don't want panic backtraces.
 - `env`: the `ESP_HAL_CONFIG_FLIP_LINK` environment variable enables zero-cost
