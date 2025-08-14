@@ -1,5 +1,7 @@
 //! helper macros.
 
+#![allow(unused_imports, unused_macros)]
+
 /// impl `From` and [`defmt::Format`] for an error enum.
 ///
 /// functions that want to return `Result<_, ()>::Err` should instead define a
