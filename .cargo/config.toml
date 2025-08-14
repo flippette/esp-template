@@ -24,12 +24,12 @@ DEFMT_LOG = "info"
 ESP_HAL_CONFIG_FLIP_LINK = "true" # esp32c6
 
 [profile.dev]
-opt-level = "z"
+opt-level = "s"
 codegen-backend = "llvm"
 debug = "line-tables-only"
 
 [profile.release]
-opt-level = "z"
+opt-level = "s"
 codegen-units = 1
 codegen-backend = "llvm"
 panic = "abort"
