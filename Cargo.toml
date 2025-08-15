@@ -24,12 +24,27 @@ esp32c6 = [
   "esp-wifi?/esp32c6",
 ]
 mbedtls = ["dep:esp-mbedtls", "wifi"]
-net = ["dep:embassy-net", "wifi"]
+net = [
+  "dep:edge-nal",
+  "dep:edge-nal-embassy",
+  "dep:embassy-net",
+  "wifi",
+]
 wifi = ["dep:esp-alloc", "dep:esp-wifi"]
 
 [dependencies]
 defmt = "1"
 static_cell = "2"
+
+[dependencies.edge-nal]
+version = "0.5"
+optional = true
+
+[dependencies.edge-nal-embassy]
+version = "0.6"
+default-features = false
+features = ["defmt", "dhcpv4", "dns", "tcp"]
+optional = true
 
 [dependencies.embassy-executor]
 version = "0.7"
