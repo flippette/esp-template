@@ -7,12 +7,12 @@ lines of code I was going to write anyway.
 
 this template can be built for both the C3 and C6:
 
-- switch between the `esp32c3` and `esp32c6` features in `Cargo.toml`
-- switch between the `riscv32imc-unknown-none-elf` and
-  `riscv32imac-unknown-none-elf` targets in `.cargo/config.toml`
+- use `just r3` to flash on C3, and `just r6` to flash on C6.
+- use `just b3` to build for C3, and `just b6` to build for C6.
+- use `just c3` to run Clippy for C3, and `just c6` to run Clippy for C6.
 
-for ESP32-C6, you should also enable the `ESP_HAL_CONFIG_FLIP_LINK` environment
-variable in the `[env]` section of `.cargo/config.toml` (see below).
+the Justfile recipes automatically set the required build target, crate
+features, and the `ESP_HAL_CONFIG_FLIP_LINK` environment variable. (see below)
 
 ## other options
 
@@ -38,10 +38,10 @@ besides target support, this template has a few more options:
 
 ## Nix
 
-the Nix flake exports 2 outputs: a dev shell and a package.
+the Nix flake exports 3 outputs: a dev shell and 2 packages, one for each chip.
 
 the dev shell contains common utilities for development: the Rust toolchain,
-`cargo-binutils`, `cargo-bloat`, and `espflash`.
+`cargo-binutils`, `cargo-bloat`, `espflash`, and `just`.
 
 building the package generates an ELF binary, which can be converted into a
 flat firmware image using `espflash` and flashed onto a module.
