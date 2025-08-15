@@ -6,10 +6,6 @@ build-std-features = [
 ]
 codegen-backend = true
 
-[build]
-# target = "riscv32imc-unknown-none-elf" # esp32c3
-target = "riscv32imac-unknown-none-elf" # esp32c6
-
 [target.'cfg(all(target_arch = "riscv32", target_os = "none"))']
 runner = "espflash flash -B 921600 -M -L defmt"
 rustflags = [
@@ -20,7 +16,6 @@ rustflags = [
 ]
 
 [env]
-ESP_HAL_CONFIG_FLIP_LINK = "true" # esp32c6
 DEFMT_LOG = "esp_template=info"
 # ESP_WIFI_CONFIG_COUNTRY_CODE = ""
 
