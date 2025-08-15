@@ -37,5 +37,5 @@ codegen-units = 1
 codegen-backend = "llvm"
 panic = "abort"
 strip = false
-debug = "line-tables-only"
+debug = true
 lto = true
