@@ -43,7 +43,13 @@ optional = true
 [dependencies.edge-nal-embassy]
 version = "0.6"
 default-features = false
-features = ["defmt", "dhcpv4", "dns", "tcp"]
+features = [
+  "defmt",
+  "dhcpv4",
+  "dns",
+  "proto-ipv4",
+  "tcp",
+]
 optional = true
 
 [dependencies.embassy-executor]
@@ -52,7 +58,13 @@ features = ["defmt", "nightly"]
 
 [dependencies.embassy-net]
 version = "0.7"
-features = ["defmt", "dhcpv4", "dns", "tcp"]
+features = [
+  "defmt",
+  "dhcpv4",
+  "dns",
+  "proto-ipv4",
+  "tcp",
+]
 optional = true
 
 [dependencies.embassy-time]
