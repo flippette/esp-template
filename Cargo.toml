@@ -99,6 +99,7 @@ features = ["defmt"]
 [dependencies.esp-mbedtls]
 git = "https://github.com/esp-rs/esp-mbedtls.git"
 rev = "35e8ccd5999cf0c831c9b825491fd68581d108c2"
+features = ["async", "esp-hal"]
 optional = true
 
 [dependencies.esp-println]
