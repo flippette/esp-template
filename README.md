@@ -29,8 +29,11 @@ besides target support, this template has a few more options:
   certain crate features; disabling this makes cold builds _slightly_ faster.
 - `build-std-features`: the `panic_immediate_abort` standard library feature is
   optional, and saves some flash space if you don't want panic backtraces.
-- `env`: the `ESP_HAL_CONFIG_FLIP_LINK` environment variable enables zero-cost
-  stack overflow protection on ESP32-C6.
+- `env`:
+  - the `ESP_HAL_CONFIG_FLIP_LINK` environment variable enables zero-cost
+    stack overflow protection on ESP32-C6.
+  - the `ESP_WIFI_CONFIG_COUNTRY_CODE` environment variable sets your Wi-Fi
+    country code.
 
 ## Nix
 
