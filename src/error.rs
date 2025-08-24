@@ -15,11 +15,11 @@ crate::macros::error! {
     Spawn(SpawnError)               => "task spawn error: {}",
 
     #[cfg(feature = "wifi")]
-    Wifi(WifiError)                 => "Wi-Fi error: {}",
+    Wifi(WifiError)                 => "wi-fi error: {}",
     #[cfg(feature = "wifi")]
-    WifiInit(WifiInitError)         => "Wi-Fi init error: {}",
+    WifiInit(WifiInitError)         => "wi-fi init error: {}",
     #[cfg(feature = "wifi")]
-    WifiInternal(InternalWifiError) => "Wi-Fi internal error: {}",
+    WifiInternal(InternalWifiError) => "wi-fi internal error: {}",
   }
 }
 
