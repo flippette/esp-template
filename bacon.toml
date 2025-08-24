@@ -45,9 +45,9 @@ command = [
   "run",
   "--release",
   "--features",
-  "esp32c3",
+  "esp32c6",
   "--target",
-  "riscv32imc-unknown-none-elf",
+  "riscv32imac-unknown-none-elf",
 ]
 need_stdout = true
 allow_warnings = true
