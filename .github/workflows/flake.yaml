@@ -13,6 +13,9 @@ jobs:
           - esp32c3
           - esp32c6
     runs-on: ${{ matrix.os }}
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: checkout
         uses: actions/checkout@v5
