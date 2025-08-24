@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-#![feature(impl_trait_in_assoc_type)]
+#![feature(impl_trait_in_assoc_type, type_alias_impl_trait)]
 #![expect(unstable_features)]
 
 mod error;
