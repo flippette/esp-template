@@ -16,6 +16,8 @@ macro_rules! error {
     $(#[$attr:meta])*
     $vis:vis enum $name:ident {
       $(
+        $(#[doc = $doc:literal])*
+        $(#[cfg($cfg:meta)])*
         $(#[format($format:ident)])?
         $var:ident ($from:ty) => $fmt:tt
       ),* $(,)?
@@ -23,10 +25,15 @@ macro_rules! error {
   ) => {
     $(#[$attr])*
     $vis enum $name {
-      $($var($from)),*
+      $(
+        $(#[cfg($cfg)])*
+        $(#[doc = $doc])*
+        $var($from)
+      ),*
     }
 
     $(
+      $(#[cfg($cfg)])*
       impl ::core::convert::From<$from> for $name {
         fn from(inner: $from) -> Self {
           Self::$var(inner)
@@ -37,8 +44,13 @@ macro_rules! error {
     impl ::defmt::Format for $name {
       fn format(&self, f: ::defmt::Formatter<'_>) {
         match self {
-          $(Self::$var(inner) => $crate::macros::error!(@priv @format_impl
-            $(#[format($format)])? $var(inner) => f, $fmt)),*
+          $(
+            $(#[cfg($cfg)])*
+            Self::$var(_inner) => $crate::macros::error!(
+              @priv @format_impl $(#[format($format)])?
+              $var(_inner) => f, $fmt
+            )
+          ),*
         }
       }
     }
