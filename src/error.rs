@@ -2,13 +2,24 @@
 
 use defmt::Str;
 use embassy_executor::SpawnError;
+#[cfg(feature = "wifi")]
+use esp_wifi::InitializationError as WifiInitError;
+#[cfg(feature = "wifi")]
+use esp_wifi::wifi::{InternalWifiError, WifiError};
 
 crate::macros::error! {
   /// common error type.
   #[derive(Clone)]
   pub enum Error {
-    AdHoc(Str) => "ad-hoc error: {}",
-    Spawn(SpawnError) => "task spawn error: {}",
+    AdHoc(Str)                      => "ad-hoc error: {}",
+    Spawn(SpawnError)               => "task spawn error: {}",
+
+    #[cfg(feature = "wifi")]
+    Wifi(WifiError)                 => "Wi-Fi error: {}",
+    #[cfg(feature = "wifi")]
+    WifiInit(WifiInitError)         => "Wi-Fi init error: {}",
+    #[cfg(feature = "wifi")]
+    WifiInternal(InternalWifiError) => "Wi-Fi internal error: {}",
   }
 }
 
