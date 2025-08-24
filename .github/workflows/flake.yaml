@@ -20,7 +20,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v5
       - name: install nix
-        uses: determinatesystems/determinate-nix-action@v3
+        uses: determinatesystems/nix-installer-action@v19
       - name: nix cache
         uses: determinatesystems/magic-nix-cache-action@v13
       - name: build flake
