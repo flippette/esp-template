@@ -23,5 +23,7 @@ jobs:
         uses: determinatesystems/nix-installer-action@v19
       - name: nix cache
         uses: determinatesystems/magic-nix-cache-action@v13
+        with:
+          use-flakehub: false
       - name: build flake
         run: nix build -L .#${{ matrix.output }}
