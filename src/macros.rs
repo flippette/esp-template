@@ -72,14 +72,12 @@ macro_rules! error {
 
 /// get a `&'static mut T`.
 ///
-/// there are 3 variants of this macro:
+/// there are 2 variants of this macro:
 ///
 /// - `const <type> = <expr>`: create a [`static_cell::ConstStaticCell`] with
 ///   some `const` initial value.
 /// - `<type> = <expr>`: create a [`static_cell::StaticCell`] with some
 ///   non-`const` initial value.
-/// - `expr`: shorthand for the second variant. requires
-///   `#![feature(type_alias_impl_trait)]` in the crate root.
 ///
 /// all variants support passing additional attributes at the beginning.
 macro_rules! make_static {
@@ -93,15 +91,6 @@ macro_rules! make_static {
   ($(#[$m:meta])* $type:ty = $val:expr) => {{
     $(#[$m])*
     static __CELL: ::static_cell::StaticCell<$type> =
-      ::static_cell::StaticCell::new();
-    __CELL.uninit().write($val)
-  }};
-
-  ($(#[$m:meta])* $val:expr) => {{
-    type OpaqueSized = impl ::core::marker::Sized;
-
-    $(#[$m])*
-    static __CELL: ::static_cell::StaticCell<OpaqueSized> =
       ::static_cell::StaticCell::new();
     __CELL.uninit().write($val)
   }};
