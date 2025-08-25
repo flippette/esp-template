@@ -1,5 +1,7 @@
 //! runtime setup.
 
+#![allow(unreachable_code)]
+
 use defmt::{info, unwrap};
 use embassy_executor::Spawner;
 use esp_hal_embassy::main;
