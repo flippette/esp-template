@@ -1,7 +1,5 @@
 //! helper macros.
 
-#![allow(unused_imports, unused_macros)]
-
 /// register a fallible main function.
 ///
 /// the function this attribute is applied on must:
@@ -39,7 +37,7 @@ pub macro main {
 /// unfortunately, you can't put any attributes on variants (including doc
 /// comments) other than `#[format(_)]`; this restriction may be lifted if the
 /// macro is converted to be a proc macro in the future.
-macro_rules! error {
+pub macro error {
   (
     $(#[$attr:meta])*
     $vis:vis enum $name:ident {
@@ -82,20 +80,20 @@ macro_rules! error {
         }
       }
     }
-  };
+  },
 
   // format string with one argument
   (@priv @format_impl
     $var:ident ($inner:expr) => $w:expr, $fmt:literal $(,)?
-  ) => { ::defmt::write!($w, $fmt, $inner) };
+  ) => { ::defmt::write!($w, $fmt, $inner) },
   // format string with no arguments
   (@priv @format_impl
     #[format(lit)] $var:ident ($inner:expr) => $w:expr, $msg:literal $(,)?
-  ) => { ::defmt::write!($w, $msg) };
+  ) => { ::defmt::write!($w, $msg) },
   // format function (impl Fn(::defmt::Formatter<'_>, $inner) -> ())
   (@priv @format_impl
     #[format(fun)] $var:ident ($inner:expr) => $w:expr, $fmt:expr $(,)?
-  ) => { $fmt($w, $inner) };
+  ) => { $fmt($w, $inner) },
 }
 
 /// get a `&'static mut T`.
@@ -108,20 +106,18 @@ macro_rules! error {
 ///   non-`const` initial value.
 ///
 /// all variants support passing additional attributes at the beginning.
-macro_rules! make_static {
+pub macro make_static {
   ($(#[$m:meta])* const $type:ty = $val:expr) => {{
     $(#[$m])*
     static __CELL: ::static_cell::ConstStaticCell<$type> =
       ::static_cell::ConstStaticCell::new($val);
     __CELL.take()
-  }};
+  }},
 
   ($(#[$m:meta])* $type:ty = $val:expr) => {{
     $(#[$m])*
     static __CELL: ::static_cell::StaticCell<$type> =
       ::static_cell::StaticCell::new();
     __CELL.uninit().write($val)
-  }};
+  }},
 }
-
-pub(crate) use {error, make_static};
