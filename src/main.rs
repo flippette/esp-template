@@ -1,19 +1,18 @@
 #![no_std]
 #![no_main]
-#![feature(impl_trait_in_assoc_type)]
+#![feature(impl_trait_in_assoc_type, macro_attr)]
 #![expect(unstable_features)]
-
-mod error;
-mod macros;
-mod rt;
 
 use defmt::info;
 use embassy_executor::Spawner;
 use esp_hal::timer::systimer::SystemTimer;
+use esp_template::prelude::*;
 use {esp_backtrace as _, esp_println as _};
 
-use crate::error::Error;
+// required for espflash
+esp_bootloader_esp_idf::esp_app_desc!();
 
+#[main]
 async fn main(_s: Spawner) -> Result<(), Error> {
   let p = esp_hal::init(<_>::default());
   let syst = SystemTimer::new(p.SYSTIMER);
