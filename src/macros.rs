@@ -2,6 +2,34 @@
 
 #![allow(unused_imports, unused_macros)]
 
+/// register a fallible main function.
+///
+/// the function this attribute is applied on must:
+/// - not be generic
+/// - take exactly one argument of type [`embassy_executor::Spawner`].
+/// - return some type that can be used with [`defmt::unwrap`].
+pub macro main {
+  attr() (
+    $(#[$attr:meta])*
+    $vis:vis async fn $name:ident(
+      $spawner:ident: $spawner_ty:ty $(,)?
+    ) -> $return_ty:ty
+    $body:block
+  ) => {
+    #[::esp_hal_embassy::main]
+    $vis async fn main(spawner: ::embassy_executor::Spawner) {
+      $(#[$attr])*
+      async fn $name(
+        $spawner: $spawner_ty,
+      ) -> $return_ty
+      $body
+
+      ::defmt::unwrap!($name(spawner).await);
+      ::defmt::info!("main exited!");
+    }
+  }
+}
+
 /// impl `From` and [`defmt::Format`] for an error enum.
 ///
 /// functions that want to return `Result<_, ()>::Err` should instead define a
