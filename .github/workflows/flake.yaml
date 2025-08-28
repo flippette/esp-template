@@ -9,9 +9,6 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
-        output:
-          - esp32c3
-          - esp32c6
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
@@ -24,5 +21,5 @@ jobs:
           purge: true
           purge-prefixes: nix-${{ runner.os }}-
           purge-primary-key: "never"
-      - name: build flake
-        run: nix build -L .#${{ matrix.output }}
+      - run: nix build -L .#esp32c3
+      - run: nix build -L .#esp32c6
