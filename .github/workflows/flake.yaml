@@ -13,13 +13,16 @@ jobs:
           - esp32c3
           - esp32c6
     runs-on: ${{ matrix.os }}
-    permissions:
-      id-token: write
-      contents: read
     steps:
-      - name: checkout
-        uses: actions/checkout@v5
-      - name: install nix
-        uses: cachix/install-nix-action@v31
+      - uses: actions/checkout@v5
+      - uses: cachix/install-nix-action@v31
+      - uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size: 1G
+          purge: true
+          purge-prefixes: nix-${{ runner.os }}-
+          purge-primary-key: "never"
       - name: build flake
         run: nix build -L .#${{ matrix.output }}
