@@ -17,13 +17,13 @@ pub macro main {
     #[::esp_hal_embassy::main]
     $vis async fn main(spawner: ::embassy_executor::Spawner) {
       $(#[$attr])*
-      async fn $name(
-        $spawner: $spawner_ty,
-      ) -> $return_ty
-      $body
+      async fn $name($spawner: $spawner_ty) -> $return_ty
+        $body
 
-      ::defmt::unwrap!($name(spawner).await);
-      ::defmt::info!("main exited!");
+      #[allow(unreachable_code)] {
+        ::defmt::unwrap!($name(spawner).await);
+        ::defmt::info!("main exited!");
+      }
     }
   }
 }
