@@ -1,6 +1,6 @@
 # esp-template
 
-opinionated bare-metal async Rust template for the ESP32-C3/C6, or about 300
+opinionated bare-metal async Rust template for the ESP32-C3/C6, or about 600
 lines of code I was going to write anyway.
 
 ## portability
