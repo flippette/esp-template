@@ -52,6 +52,47 @@
 
         doCheck = false;
       };
+
+      c3Args =
+        commonArgs
+        // {
+          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+            "--target riscv32imc-unknown-none-elf"
+            "--features esp32c3"
+          ];
+        };
+
+      c6Args =
+        commonArgs
+        // {
+          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+            "--target riscv32imac-unknown-none-elf"
+            "--features esp32c6"
+          ];
+
+          ESP_HAL_CONFIG_FLIP_LINK = "true";
+        };
+
+      esp32c3-deps = craneLib.buildDepsOnly c3Args;
+      esp32c6-deps = craneLib.buildDepsOnly c6Args;
+
+      esp32c3-clippy = craneLib.cargoClippy (c3Args
+        // {
+          cargoArtifacts = esp32c3-deps;
+          cargoClippyExtraArgs = "-- -W clippy::pedantic";
+        });
+      esp32c6-clippy = craneLib.cargoClippy (c6Args
+        // {
+          cargoArtifacts = esp32c6-deps;
+          cargoClippyExtraArgs = "-- -W clippy::pedantic";
+        });
+
+      esp32c3 =
+        craneLib.buildPackage (c3Args
+          // {cargoArtifacts = esp32c3-deps;});
+      esp32c6 =
+        craneLib.buildPackage (c6Args
+          // {cargoArtifacts = esp32c6-deps;});
     in
       with pkgs; {
         devShells.default = mkShell {
@@ -59,23 +100,12 @@
         };
 
         packages = {
-          esp32c3 = craneLib.buildPackage (commonArgs
-            // {
-              cargoExtraArgs = lib.concatStringsSep " " [
-                "--target riscv32imc-unknown-none-elf"
-                "--features esp32c3"
-              ];
-            });
+          inherit esp32c3 esp32c6;
+        };
 
-          esp32c6 = craneLib.buildPackage (commonArgs
-            // {
-              cargoExtraArgs = lib.concatStringsSep " " [
-                "--target riscv32imac-unknown-none-elf"
-                "--features esp32c6"
-              ];
-
-              ESP_HAL_CONFIG_FLIP_LINK = "true";
-            });
+        checks = {
+          inherit esp32c3 esp32c6;
+          inherit esp32c3-clippy esp32c6-clippy;
         };
 
         formatter = alejandra;

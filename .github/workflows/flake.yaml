@@ -21,5 +21,4 @@ jobs:
           purge: true
           purge-prefixes: nix-${{ runner.os }}-
           purge-primary-key: "never"
-      - run: nix build -L .#esp32c3
-      - run: nix build -L .#esp32c6
+      - run: nix flake check
