@@ -87,6 +87,17 @@
           cargoClippyExtraArgs = "-- -W clippy::pedantic";
         });
 
+      esp32c3-deny = craneLib.cargoDeny (c3Args
+        // {
+          cargoArtifacts = esp32c3-deps;
+          cargoDenyChecks = "all";
+        });
+      esp32c6-deny = craneLib.cargoDeny (c6Args
+        // {
+          cargoArtifacts = esp32c6-deps;
+          cargoDenyChecks = "all";
+        });
+
       esp32c3 =
         craneLib.buildPackage (c3Args
           // {cargoArtifacts = esp32c3-deps;});
@@ -104,8 +115,9 @@
         };
 
         checks = {
-          inherit esp32c3 esp32c6;
           inherit esp32c3-clippy esp32c6-clippy;
+          inherit esp32c3-deny esp32c6-deny;
+          inherit esp32c3 esp32c6;
         };
 
         formatter = alejandra;
