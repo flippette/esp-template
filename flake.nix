@@ -73,37 +73,28 @@
           ESP_HAL_CONFIG_FLIP_LINK = "true";
         };
 
-      esp32c3-deps = craneLib.buildDepsOnly c3Args;
-      esp32c6-deps = craneLib.buildDepsOnly c6Args;
+      c3-deps = craneLib.buildDepsOnly c3Args;
+      c6-deps = craneLib.buildDepsOnly c6Args;
 
-      esp32c3-clippy = craneLib.cargoClippy (c3Args
+      c3-clippy = craneLib.cargoClippy (c3Args
         // {
-          cargoArtifacts = esp32c3-deps;
+          cargoArtifacts = c3-deps;
           cargoClippyExtraArgs = "-- -W clippy::pedantic";
         });
-      esp32c6-clippy = craneLib.cargoClippy (c6Args
+      c6-clippy = craneLib.cargoClippy (c6Args
         // {
-          cargoArtifacts = esp32c6-deps;
+          cargoArtifacts = c6-deps;
           cargoClippyExtraArgs = "-- -W clippy::pedantic";
         });
 
-      esp32c3-deny = craneLib.cargoDeny (c3Args
-        // {
-          cargoArtifacts = esp32c3-deps;
-          cargoDenyChecks = "all";
-        });
-      esp32c6-deny = craneLib.cargoDeny (c6Args
-        // {
-          cargoArtifacts = esp32c6-deps;
-          cargoDenyChecks = "all";
-        });
+      cx-deny = craneLib.cargoDeny commonArgs;
 
-      esp32c3 =
+      c3 =
         craneLib.buildPackage (c3Args
-          // {cargoArtifacts = esp32c3-deps;});
-      esp32c6 =
+          // {cargoArtifacts = c3-deps;});
+      c6 =
         craneLib.buildPackage (c6Args
-          // {cargoArtifacts = esp32c6-deps;});
+          // {cargoArtifacts = c6-deps;});
     in
       with pkgs; {
         devShells.default = mkShell {
@@ -111,13 +102,13 @@
         };
 
         packages = {
-          inherit esp32c3 esp32c6;
+          inherit c3 c6;
         };
 
         checks = {
-          inherit esp32c3-clippy esp32c6-clippy;
-          inherit esp32c3-deny esp32c6-deny;
-          inherit esp32c3 esp32c6;
+          inherit c3-clippy c6-clippy;
+          inherit cx-deny;
+          inherit c3 c6;
         };
 
         formatter = alejandra;
