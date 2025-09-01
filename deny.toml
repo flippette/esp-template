@@ -1,0 +1,21 @@
+[graph]
+targets = [
+  "riscv32imc-unknown-none-elf",
+  "riscv32imac-unknown-none-elf",
+]
+all-features = true
+
+[[advisories.ignore]]
+id = "RUSTSEC-2024-0436"
+reason = "deps are not switching away from paste"
+
+[licenses]
+allow = [
+  "0BSD",
+  "AGPL-3.0-only",
+  "Apache-2.0",
+  "BSD-3-Clause",
+  "ISC",
+  "MIT",
+  "Unicode-3.0",
+]
