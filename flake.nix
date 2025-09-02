@@ -33,8 +33,8 @@
           ];
         };
 
-      # common args between the C3 and C6 packages
-      commonArgs = {
+      # base build flags, with LTO
+      buildArgs = {
         inherit src;
         strictDeps = true;
 
@@ -53,48 +53,77 @@
         doCheck = false;
       };
 
-      c3Args =
-        commonArgs
+      # LTO disable override
+      ciArgs = {
+        CARGO_PROFILE_RELEASE_LTO = "false";
+      };
+
+      # c3-specific cargo flags
+      c3Args = {
+        cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+          "--target riscv32imc-unknown-none-elf"
+          "--features esp32c3"
+        ];
+      };
+
+      # c6-specific cargo flags
+      c6Args = {
+        cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+          "--target riscv32imac-unknown-none-elf"
+          "--features esp32c6"
+        ];
+
+        ESP_HAL_CONFIG_FLIP_LINK = "true";
+      };
+
+      # these are only really useful in CI
+      c3Artifacts = craneLib.buildDepsOnly (buildArgs // ciArgs // c3Args);
+      c6Artifacts = craneLib.buildDepsOnly (buildArgs // ciArgs // c6Args);
+
+      # run clippy for both outputs
+      c3-clippy = craneLib.cargoClippy (buildArgs
+        // ciArgs
+        // c3Args
         // {
-          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-            "--target riscv32imc-unknown-none-elf"
-            "--features esp32c3"
-          ];
-        };
-
-      c6Args =
-        commonArgs
-        // {
-          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-            "--target riscv32imac-unknown-none-elf"
-            "--features esp32c6"
-          ];
-
-          ESP_HAL_CONFIG_FLIP_LINK = "true";
-        };
-
-      c3-deps = craneLib.buildDepsOnly c3Args;
-      c6-deps = craneLib.buildDepsOnly c6Args;
-
-      c3-clippy = craneLib.cargoClippy (c3Args
-        // {
-          cargoArtifacts = c3-deps;
+          cargoArtifacts = c3Artifacts;
           cargoClippyExtraArgs = "-- -W clippy::pedantic";
         });
-      c6-clippy = craneLib.cargoClippy (c6Args
+      c6-clippy = craneLib.cargoClippy (buildArgs
+        // ciArgs
+        // c6Args
         // {
-          cargoArtifacts = c6-deps;
+          cargoArtifacts = c6Artifacts;
           cargoClippyExtraArgs = "-- -W clippy::pedantic";
         });
 
-      cx-deny = craneLib.cargoDeny commonArgs;
+      # run cargo-deny for all features
+      cx-deny = craneLib.cargoDeny (buildArgs // ciArgs);
 
-      c3 =
-        craneLib.buildPackage (c3Args
-          // {cargoArtifacts = c3-deps;});
-      c6 =
-        craneLib.buildPackage (c6Args
-          // {cargoArtifacts = c6-deps;});
+      # build without LTO in CI
+      c3-ci = craneLib.buildPackage (buildArgs
+        // ciArgs
+        // c3Args
+        // {
+          cargoArtifacts = c3Artifacts;
+        });
+      c6-ci = craneLib.buildPackage (buildArgs
+        // ciArgs
+        // c6Args
+        // {
+          cargoArtifacts = c6Artifacts;
+        });
+
+      # build with LTO for release
+      c3 = craneLib.buildPackage (buildArgs
+        // c3Args
+        // {
+          cargoArtifacts = c3Artifacts;
+        });
+      c6 = craneLib.buildPackage (buildArgs
+        // c6Args
+        // {
+          cargoArtifacts = c6Artifacts;
+        });
     in
       with pkgs; {
         devShells.default = mkShell {
@@ -107,8 +136,8 @@
 
         checks = {
           inherit c3-clippy c6-clippy;
+          inherit c3-ci c6-ci;
           inherit cx-deny;
-          inherit c3 c6;
         };
 
         formatter = alejandra;
