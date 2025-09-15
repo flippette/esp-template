@@ -7,6 +7,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     crane.url = "github:ipetkov/crane";
+    advisory-db = {
+      url = "github:rustsec/advisory-db";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -15,6 +19,7 @@
     flake-utils,
     rust-overlay,
     crane,
+    advisory-db,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       overlays = [(import rust-overlay)];
@@ -115,6 +120,11 @@
           });
 
         deny = craneLib.cargoDeny commonArgs;
+
+        audit = craneLib.cargoAudit (commonArgs
+          // {
+            inherit advisory-db;
+          });
       };
 
       formatter = pkgs.alejandra;
