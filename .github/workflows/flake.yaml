@@ -15,10 +15,10 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v31
       - uses: nix-community/cache-nix-action@v6
         with:
-          primary-key: nix-${{ github.ref }}-${{ matrix.target }}-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
-          restore-prefixes-first-match: nix-${{ github.ref }}-${{ matrix.target }}-
+          primary-key: nix-${{ github.ref_name }}-${{ matrix.target }}-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
+          restore-prefixes-first-match: nix-${{ github.ref_name }}-${{ matrix.target }}-
           purge: true
-          purge-prefixes: nix-${{ github.ref }}-${{ matrix.target }}-
+          purge-prefixes: nix-${{ github.ref_name }}-${{ matrix.target }}-
           purge-primary-key: "never"
       - run: nix build .#${{ matrix.target }}
   audit:
@@ -28,9 +28,9 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v31
       - uses: nix-community/cache-nix-action@v6
         with:
-          primary-key: nix-${{ github.ref }}-audit-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
-          restore-prefixes-first-match: nix-${{ github.ref }}-audit-
+          primary-key: nix-${{ github.ref_name }}-audit-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
+          restore-prefixes-first-match: nix-${{ github.ref_name }}-audit-
           purge: true
-          purge-prefixes: nix-${{ github.ref }}-audit-
+          purge-prefixes: nix-${{ github.ref_name }}-audit-
           purge-primary-key: "never"
       - run: nix flake check
