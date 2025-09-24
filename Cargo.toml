@@ -10,7 +10,6 @@ esp32c3 = [
   "esp-bootloader-esp-idf/esp32c3",
   "esp-hal/esp32c3",
   "esp-hal-embassy/esp32c3",
-  # "esp-mbedtls?/esp32c3",
   "esp-println/esp32c3",
   "esp-radio?/esp32c3",
 ]
@@ -19,11 +18,9 @@ esp32c6 = [
   "esp-bootloader-esp-idf/esp32c6",
   "esp-hal/esp32c6",
   "esp-hal-embassy/esp32c6",
-  # "esp-mbedtls?/esp32c6",
   "esp-println/esp32c6",
   "esp-radio?/esp32c6",
 ]
-# mbedtls = ["dep:esp-mbedtls", "wifi"]
 net = [
   "dep:edge-nal",
   "dep:edge-nal-embassy",
@@ -96,12 +93,6 @@ features = ["defmt", "unstable"]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt"]
-
-# [dependencies.esp-mbedtls]
-# git = "https://github.com/esp-rs/esp-mbedtls.git"
-# rev = "35e8ccd5999cf0c831c9b825491fd68581d108c2"
-# features = ["async", "esp-hal"]
-# optional = true
 
 [dependencies.esp-println]
 git = "https://github.com/esp-rs/esp-hal.git"
