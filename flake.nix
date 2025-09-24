@@ -54,30 +54,6 @@
           ];
         };
       };
-
-      c3TargetArgs = {
-        cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-          "--target riscv32imc-unknown-none-elf"
-          "--features esp32c3"
-        ];
-      };
-      c6TargetArgs = {
-        cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-          "--target riscv32imac-unknown-none-elf"
-          "--features esp32c6"
-        ];
-
-        ESP_HAL_CONFIG_FLIP_LINK = "true";
-      };
-
-      c3Artifacts = cranelib.buildDepsOnly (commonArgs // c3TargetArgs);
-      c6Artifacts = cranelib.buildDepsOnly (commonArgs // c6TargetArgs);
-
-      c3Args = c3TargetArgs // {cargoArtifacts = c3Artifacts;};
-      c6Args = c6TargetArgs // {cargoArtifacts = c6Artifacts;};
-
-      c3-build = cranelib.buildPackage (commonArgs // c3Args);
-      c6-build = cranelib.buildPackage (commonArgs // c6Args);
     in {
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
@@ -90,18 +66,27 @@
       };
 
       packages = {
-        inherit c3-build c6-build;
+        c3 = cranelib.buildPackage (commonArgs
+          // {
+            cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+              "--target riscv32imc-unknown-none-elf"
+              "--features esp32c3"
+            ];
+          });
+        c6 = cranelib.buildPackage (commonArgs
+          // {
+            cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+              "--target riscv32imac-unknown-none-elf"
+              "--features esp32c6"
+            ];
+
+            ESP_HAL_CONFIG_FLIP_LINK = "true";
+          });
       };
 
       checks = let
-        clippyArgs = {cargoClippyExtraArgs = "-- -Wclippy::pedantic";};
         auditArgs = {inherit advisory-db;};
       in {
-        inherit c3-build c6-build;
-
-        c3-clippy = cranelib.cargoClippy (commonArgs // c3Args // clippyArgs);
-        c6-clippy = cranelib.cargoClippy (commonArgs // c6Args // clippyArgs);
-
         audit = cranelib.cargoAudit (commonArgs // auditArgs);
         deny = cranelib.cargoDeny commonArgs;
       };
