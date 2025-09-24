@@ -10,27 +10,27 @@ esp32c3 = [
   "esp-bootloader-esp-idf/esp32c3",
   "esp-hal/esp32c3",
   "esp-hal-embassy/esp32c3",
-  "esp-mbedtls?/esp32c3",
+  # "esp-mbedtls?/esp32c3",
   "esp-println/esp32c3",
-  "esp-wifi?/esp32c3",
+  "esp-radio?/esp32c3",
 ]
 esp32c6 = [
   "esp-backtrace/esp32c6",
   "esp-bootloader-esp-idf/esp32c6",
   "esp-hal/esp32c6",
   "esp-hal-embassy/esp32c6",
-  "esp-mbedtls?/esp32c6",
+  # "esp-mbedtls?/esp32c6",
   "esp-println/esp32c6",
-  "esp-wifi?/esp32c6",
+  "esp-radio?/esp32c6",
 ]
-mbedtls = ["dep:esp-mbedtls", "wifi"]
+# mbedtls = ["dep:esp-mbedtls", "wifi"]
 net = [
   "dep:edge-nal",
   "dep:edge-nal-embassy",
   "dep:embassy-net",
   "wifi",
 ]
-wifi = ["dep:esp-alloc", "dep:esp-wifi"]
+wifi = ["dep:esp-alloc", "dep:esp-radio"]
 
 [dependencies]
 defmt = "1"
@@ -53,7 +53,7 @@ features = [
 optional = true
 
 [dependencies.embassy-executor]
-version = "0.7"
+version = "0.9"
 features = ["defmt", "nightly"]
 
 [dependencies.embassy-net]
@@ -68,45 +68,48 @@ features = [
 optional = true
 
 [dependencies.embassy-time]
-version = "0.4"
+version = "0.5"
 features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-alloc]
-version = "0.8"
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt", "nightly"]
 optional = true
 
 [dependencies.esp-backtrace]
-version = "0.17"
-features = [
-  "defmt",
-  "exception-handler",
-  "panic-handler",
-]
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+features = ["defmt", "panic-handler"]
 
 [dependencies.esp-bootloader-esp-idf]
-version = "0.2"
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt"]
 
 [dependencies.esp-hal]
-version = "1.0.0-rc.0"
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt", "unstable"]
 
 [dependencies.esp-hal-embassy]
-version = "0.9"
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt"]
 
-[dependencies.esp-mbedtls]
-git = "https://github.com/esp-rs/esp-mbedtls.git"
-rev = "35e8ccd5999cf0c831c9b825491fd68581d108c2"
-features = ["async", "esp-hal"]
-optional = true
+# [dependencies.esp-mbedtls]
+# git = "https://github.com/esp-rs/esp-mbedtls.git"
+# rev = "35e8ccd5999cf0c831c9b825491fd68581d108c2"
+# features = ["async", "esp-hal"]
+# optional = true
 
 [dependencies.esp-println]
-version = "0.15"
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt-espflash"]
 
-[dependencies.esp-wifi]
-version = "0.15"
+[dependencies.esp-radio]
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt", "wifi"]
 optional = true
