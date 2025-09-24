@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-#![feature(impl_trait_in_assoc_type, macro_attr)]
+#![feature(macro_attr)]
 #![expect(unstable_features)]
 
 use defmt::info;

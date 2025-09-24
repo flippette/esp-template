@@ -51,7 +51,7 @@ optional = true
 
 [dependencies.embassy-executor]
 version = "0.9"
-features = ["defmt", "nightly"]
+features = ["defmt"]
 
 [dependencies.embassy-net]
 version = "0.7"
