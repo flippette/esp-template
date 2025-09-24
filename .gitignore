@@ -1,4 +1,5 @@
 # personal env
+/.direnv/
 /.envrc
 
 # build artifacts
