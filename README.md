@@ -1,6 +1,6 @@
 # esp-template
 
-opinionated bare-metal async Rust template for the ESP32-C3/C6, or about 600
+opinionated bare-metal async Rust template for the ESP32-C3/C6, or about 550
 lines of code I was going to write anyway.
 
 ## portability
@@ -20,8 +20,8 @@ besides target support, this template has a few more options:
 
 `Cargo.toml` features:
 
-- `net`: enables Wi-Fi and networking support. (requires `alloc` in `build-std`)
-- `mbedtls`: enables TLS support using `esp-mbedtls`. (requires `alloc` in `build-std`)
+- `net`: enables networking support through `embassy-net` (implies `wifi`).
+- `wifi`: enables Wi-Fi support (requires `build-std = "alloc"`).
 
 `.cargo/config.toml` options:
 
@@ -38,7 +38,8 @@ besides target support, this template has a few more options:
 
 ## Nix
 
-the Nix flake exports 3 outputs: a dev shell and 2 packages, one for each chip.
+the Nix flake exports 4 outputs: a dev shell, some checks, and 2 packages, one
+for each chip.
 
 the dev shell contains common utilities for development: the Rust toolchain,
 `cargo-binutils`, `cargo-bloat`, `espflash`, and `just`.
@@ -49,3 +50,12 @@ flat firmware image using `espflash` and flashed onto a module.
 due to an [issue](https://github.com/esp-rs/espflash/issues/935) with
 `espflash`, the package doesn't generate this flat firmware image automatically.
 this will be done in the future, once the issue is resolved.
+
+## branches
+
+to use the version of `esp-hal` currently published on `crates.io`, use the
+`main` branch of this template.
+
+`esp-hal` is going to hit `1.0.0-rc.1` _Soon™_. in the meantime, if you want to
+use `esp-hal` straight from `git`, use the `esp-hal-git` branch of this
+template; it will be kept mostly up-to-date with the `main` branch of `esp-hal`.
