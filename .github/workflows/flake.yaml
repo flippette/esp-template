@@ -6,18 +6,33 @@ jobs:
   build:
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-    runs-on: ${{ matrix.os }}
+        target:
+          - c3
+          - c6
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: nixbuild/nix-quick-install-action@v31
       - uses: nix-community/cache-nix-action@v6
         with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
+          primary-key: nix-${{ matrix.target }}-
+            >${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
+          restore-prefixes-first-match: nix-${{ matrix.target }}-
           purge: true
-          purge-prefixes: nix-${{ runner.os }}-
+          purge-prefixes: nix-${{ matrix.target }}-
+          purge-primary-key: "never"
+      - run: nix build .#${{ matrix.target }}
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: nixbuild/nix-quick-install-action@v31
+      - uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-c6-
+            >${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
+          restore-prefixes-first-match: nix-c6-
+          purge: true
+          purge-prefixes: nix-c6-
           purge-primary-key: "never"
       - run: nix flake check
