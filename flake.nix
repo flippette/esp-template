@@ -23,49 +23,45 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       overlays = [(import rust-overlay)];
-      pkgs = import nixpkgs {
-        inherit system overlays;
-      };
-      rustBin = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-      craneLib = (crane.mkLib pkgs).overrideToolchain rustBin;
+      pkgs = import nixpkgs {inherit system overlays;};
+      rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+      cranelib = (crane.mkLib pkgs).overrideToolchain rust;
 
-      # include additional files relative to the root
       unfilteredRoot = ./.;
       src = with pkgs;
         lib.fileset.toSource {
           root = unfilteredRoot;
           fileset = lib.fileset.unions [
-            (craneLib.fileset.commonCargoSources unfilteredRoot)
-            # additional files go here
+            (cranelib.fileset.commonCargoSources unfilteredRoot)
+            # extra files go here
           ];
         };
 
       commonArgs = {
         inherit src;
         strictDeps = true;
+        doCheck = false;
 
-        cargoVendorDir = craneLib.vendorMultipleCargoDeps {
-          inherit (craneLib.findCargoFiles src) cargoConfigs;
+        cargoVendorDir = cranelib.vendorMultipleCargoDeps {
+          inherit (cranelib.findCargoFiles src) cargoConfigs;
           cargoLockList = [
             ./Cargo.lock
 
             # needed for `-Z build-std`
             # <https://crane.dev/examples/build-std.html>
-            ("${rustBin.passthru.availableComponents.rust-src}"
+            ("${rust.passthru.availableComponents.rust-src}"
               + "/lib/rustlib/src/rust/library/Cargo.lock")
           ];
         };
-
-        doCheck = false;
       };
 
-      c3Args = {
+      c3TargetArgs = {
         cargoExtraArgs = pkgs.lib.concatStringsSep " " [
           "--target riscv32imc-unknown-none-elf"
           "--features esp32c3"
         ];
       };
-      c6Args = {
+      c6TargetArgs = {
         cargoExtraArgs = pkgs.lib.concatStringsSep " " [
           "--target riscv32imac-unknown-none-elf"
           "--features esp32c6"
@@ -74,19 +70,14 @@
         ESP_HAL_CONFIG_FLIP_LINK = "true";
       };
 
-      c3Artifacts = craneLib.buildDepsOnly (commonArgs // c3Args);
-      c6Artifacts = craneLib.buildDepsOnly (commonArgs // c6Args);
+      c3Artifacts = cranelib.buildDepsOnly (commonArgs // c3TargetArgs);
+      c6Artifacts = cranelib.buildDepsOnly (commonArgs // c6TargetArgs);
 
-      c3 = craneLib.buildPackage (commonArgs
-        // c3Args
-        // {
-          cargoArtifacts = c3Artifacts;
-        });
-      c6 = craneLib.buildPackage (commonArgs
-        // c6Args
-        // {
-          cargoArtifacts = c6Artifacts;
-        });
+      c3Args = c3TargetArgs // {cargoArtifacts = c3Artifacts;};
+      c6Args = c6TargetArgs // {cargoArtifacts = c6Artifacts;};
+
+      c3-build = cranelib.buildPackage (commonArgs // c3Args);
+      c6-build = cranelib.buildPackage (commonArgs // c6Args);
     in {
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
@@ -94,37 +85,25 @@
           cargo-bloat
           espflash
           just
-          rustBin
+          rust
         ];
       };
 
       packages = {
-        inherit c3 c6;
+        inherit c3-build c6-build;
       };
 
-      checks = {
-        inherit c3 c6;
+      checks = let
+        clippyArgs = {cargoClippyExtraArgs = "-- -Wclippy::pedantic";};
+        auditArgs = {inherit advisory-db;};
+      in {
+        inherit c3-build c6-build;
 
-        c3-clippy = craneLib.cargoClippy (commonArgs
-          // c3Args
-          // {
-            cargoArtifacts = c3Artifacts;
-            cargoClippyExtraArgs = "-- -W clippy::pedantic";
-          });
+        c3-clippy = cranelib.cargoClippy (commonArgs // c3Args // clippyArgs);
+        c6-clippy = cranelib.cargoClippy (commonArgs // c6Args // clippyArgs);
 
-        c6-clippy = craneLib.cargoClippy (commonArgs
-          // c3Args
-          // {
-            cargoArtifacts = c6Artifacts;
-            cargoClippyExtraArgs = "-- -W clippy::pedantic";
-          });
-
-        deny = craneLib.cargoDeny commonArgs;
-
-        audit = craneLib.cargoAudit (commonArgs
-          // {
-            inherit advisory-db;
-          });
+        audit = cranelib.cargoAudit (commonArgs // auditArgs);
+        deny = cranelib.cargoDeny commonArgs;
       };
 
       formatter = pkgs.alejandra;
