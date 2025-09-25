@@ -31,6 +31,7 @@ jobs:
         with:
           primary-key: nix-${{ github.ref_name }}-audit-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
           restore-prefixes-first-match: nix-${{ github.ref_name }}-audit-
+          save: false
           purge: true
           purge-prefixes: nix-${{ github.ref_name }}-audit-
           purge-primary-key: "never"
