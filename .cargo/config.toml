@@ -1,5 +1,5 @@
 [unstable]
-build-std = ["core", "alloc", "panic_abort"]
+build-std = ["core", "panic_abort"]
 build-std-features = ["optimize_for_size"]
 codegen-backend = true
 
@@ -17,7 +17,6 @@ rustflags = [
 
 [env]
 DEFMT_LOG = "esp_template=info"
-# ESP_WIFI_CONFIG_COUNTRY_CODE = ""
 
 [profile.dev]
 opt-level = "s"

@@ -5,94 +5,29 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [features]
-# target support
 esp32c3 = [
   "esp-backtrace/esp32c3",
   "esp-bootloader-esp-idf/esp32c3",
   "esp-hal/esp32c3",
   "esp-hal-embassy/esp32c3",
-  "esp-preempt?/esp32c3",
   "esp-println/esp32c3",
-  "esp-radio?/esp32c3",
 ]
 esp32c6 = [
   "esp-backtrace/esp32c6",
   "esp-bootloader-esp-idf/esp32c6",
   "esp-hal/esp32c6",
   "esp-hal-embassy/esp32c6",
-  "esp-preempt?/esp32c6",
   "esp-println/esp32c6",
-  "esp-radio?/esp32c6",
-]
-# esp-radio
-ble = [
-  "radio",
-  "esp-radio?/ble",
-  "esp-radio?/unstable",
-]
-wifi = ["radio", "esp-radio?/wifi"]
-coex = [
-  "radio",
-  "esp-radio?/coex",
-  "esp-radio?/unstable",
-]
-radio = [
-  "dep:esp-alloc",
-  "dep:esp-preempt",
-  "dep:esp-radio",
-]
-# high-level extras
-net = [
-  "dep:edge-nal",
-  "dep:edge-nal-embassy",
-  "dep:embassy-net",
-  "wifi",
 ]
 
 [dependencies]
 defmt = "1"
+embassy-executor = "0.9"
 static_cell = "2"
-
-[dependencies.edge-nal]
-version = "0.5"
-optional = true
-
-[dependencies.edge-nal-embassy]
-version = "0.6"
-default-features = false
-features = [
-  "defmt",
-  "dhcpv4",
-  "dns",
-  "proto-ipv4",
-  "tcp",
-]
-optional = true
-
-[dependencies.embassy-executor]
-version = "0.9"
-features = ["defmt"]
-
-[dependencies.embassy-net]
-version = "0.7"
-features = [
-  "defmt",
-  "dhcpv4",
-  "dns",
-  "proto-ipv4",
-  "tcp",
-]
-optional = true
 
 [dependencies.embassy-time]
 version = "0.5"
 features = ["defmt-timestamp-uptime-us"]
-
-[dependencies.esp-alloc]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-features = ["defmt", "nightly"]
-optional = true
 
 [dependencies.esp-backtrace]
 git = "https://github.com/esp-rs/esp-hal.git"
@@ -102,30 +37,17 @@ features = ["defmt", "panic-handler"]
 [dependencies.esp-bootloader-esp-idf]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-features = ["defmt"]
 
 [dependencies.esp-hal]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-features = ["defmt", "unstable"]
+features = ["unstable"]
 
 [dependencies.esp-hal-embassy]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-features = ["defmt"]
-
-[dependencies.esp-preempt]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-optional = true
 
 [dependencies.esp-println]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt-espflash"]
-
-[dependencies.esp-radio]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-features = ["defmt"]
-optional = true
