@@ -770,6 +770,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "esp-preempt"
+version = "0.0.1"
+source = "git+https://github.com/esp-rs/esp-hal.git?rev=caadbbba4171022a73368bdcffc0116249237dd6#caadbbba4171022a73368bdcffc0116249237dd6"
+dependencies = [
+ "allocator-api2",
+ "cfg-if",
+ "document-features",
+ "esp-alloc",
+ "esp-config",
+ "esp-hal",
+ "esp-metadata-generated",
+ "esp-radio-preempt-driver",
+ "esp-sync",
+ "portable-atomic",
+]
+
+[[package]]
 name = "esp-println"
 version = "0.15.0"
 source = "git+https://github.com/esp-rs/esp-hal.git?rev=caadbbba4171022a73368bdcffc0116249237dd6#caadbbba4171022a73368bdcffc0116249237dd6"
@@ -870,6 +887,7 @@ dependencies = [
  "esp-bootloader-esp-idf",
  "esp-hal",
  "esp-hal-embassy",
+ "esp-preempt",
  "esp-println",
  "esp-radio",
  "static_cell",
