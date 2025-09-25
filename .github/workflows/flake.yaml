@@ -17,6 +17,7 @@ jobs:
         with:
           primary-key: nix-${{ github.ref_name }}-${{ matrix.target }}-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
           restore-prefixes-first-match: nix-${{ github.ref_name }}-${{ matrix.target }}-
+          gc-max-store-size: 1G
           purge: true
           purge-prefixes: nix-${{ github.ref_name }}-${{ matrix.target }}-
           purge-primary-key: "never"
