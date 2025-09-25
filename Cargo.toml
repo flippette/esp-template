@@ -5,11 +5,13 @@ edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [features]
+# target support
 esp32c3 = [
   "esp-backtrace/esp32c3",
   "esp-bootloader-esp-idf/esp32c3",
   "esp-hal/esp32c3",
   "esp-hal-embassy/esp32c3",
+  "esp-preempt?/esp32c3",
   "esp-println/esp32c3",
   "esp-radio?/esp32c3",
 ]
@@ -18,16 +20,34 @@ esp32c6 = [
   "esp-bootloader-esp-idf/esp32c6",
   "esp-hal/esp32c6",
   "esp-hal-embassy/esp32c6",
+  "esp-preempt?/esp32c6",
   "esp-println/esp32c6",
   "esp-radio?/esp32c6",
 ]
+# esp-radio
+ble = [
+  "radio",
+  "esp-radio?/ble",
+  "esp-radio?/unstable",
+]
+wifi = ["radio", "esp-radio?/wifi"]
+coex = [
+  "radio",
+  "esp-radio?/coex",
+  "esp-radio?/unstable",
+]
+radio = [
+  "dep:esp-alloc",
+  "dep:esp-preempt",
+  "dep:esp-radio",
+]
+# high-level extras
 net = [
   "dep:edge-nal",
   "dep:edge-nal-embassy",
   "dep:embassy-net",
   "wifi",
 ]
-wifi = ["dep:esp-alloc", "dep:esp-radio"]
 
 [dependencies]
 defmt = "1"
@@ -94,6 +114,11 @@ git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
 features = ["defmt"]
 
+[dependencies.esp-preempt]
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+optional = true
+
 [dependencies.esp-println]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
@@ -102,5 +127,5 @@ features = ["defmt-espflash"]
 [dependencies.esp-radio]
 git = "https://github.com/esp-rs/esp-hal.git"
 rev = "caadbbba4171022a73368bdcffc0116249237dd6"
-features = ["defmt", "wifi"]
+features = ["defmt"]
 optional = true
