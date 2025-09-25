@@ -31,23 +31,23 @@ features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
 features = ["defmt", "panic-handler"]
 
 [dependencies.esp-bootloader-esp-idf]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
 
 [dependencies.esp-hal]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
 features = ["unstable"]
 
 [dependencies.esp-hal-embassy]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
 
 [dependencies.esp-println]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "caadbbba4171022a73368bdcffc0116249237dd6"
+rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
 features = ["defmt-espflash"]
