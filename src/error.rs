@@ -2,10 +2,10 @@
 
 use defmt::Str;
 use embassy_executor::SpawnError;
+#[cfg(feature = "radio")]
+use esp_radio::InitializationError as RadioInitError;
 #[cfg(feature = "wifi")]
-use esp_wifi::InitializationError as WifiInitError;
-#[cfg(feature = "wifi")]
-use esp_wifi::wifi::{InternalWifiError, WifiError};
+use esp_radio::wifi::{InternalWifiError, WifiError};
 
 crate::macros::error! {
   /// common error type.
@@ -14,10 +14,11 @@ crate::macros::error! {
     AdHoc(Str)                      => "ad-hoc error: {}",
     Spawn(SpawnError)               => "task spawn error: {}",
 
+    #[cfg(feature = "radio")]
+    RadioInit(RadioInitError)       => "radio init error: {}",
+
     #[cfg(feature = "wifi")]
     Wifi(WifiError)                 => "wi-fi error: {}",
-    #[cfg(feature = "wifi")]
-    WifiInit(WifiInitError)         => "wi-fi init error: {}",
     #[cfg(feature = "wifi")]
     WifiInternal(InternalWifiError) => "wi-fi internal error: {}",
   }
