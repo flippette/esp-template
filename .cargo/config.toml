@@ -11,8 +11,8 @@ runner = "espflash flash -B 115200 -M -L defmt"
 rustflags = [
   "-Cforce-frame-pointers=yes",
   "-Clink-arg=--nmagic",
-  "-Clink-arg=-Tdefmt.x",
   "-Clink-arg=-Tlinkall.x",
+  "-Clink-arg=-Tdefmt.x",
 ]
 
 [env]
