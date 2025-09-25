@@ -12,9 +12,7 @@ reason = "deps are not switching away from paste"
 [licenses]
 allow = [
   "0BSD",
-  "AGPL-3.0-only",
   "Apache-2.0",
-  "BSD-3-Clause",
   "ISC",
   "MIT",
   "Unicode-3.0",
