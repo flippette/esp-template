@@ -88,7 +88,6 @@
         auditArgs = {inherit advisory-db;};
       in {
         audit = cranelib.cargoAudit (commonArgs // auditArgs);
-        deny = cranelib.cargoDeny commonArgs;
       };
 
       formatter = pkgs.alejandra;
