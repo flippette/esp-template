@@ -9,7 +9,6 @@ use esp_radio::wifi::{InternalWifiError, WifiError};
 
 crate::macros::error! {
   /// common error type.
-  #[derive(Clone)]
   pub enum Error {
     AdHoc(Str)                      => "ad-hoc error: {}",
     Spawn(SpawnError)               => "task spawn error: {}",
