@@ -1,9 +1,6 @@
 [unstable]
 build-std = ["core", "alloc", "panic_abort"]
-build-std-features = [
-  "optimize_for_size",
-  "panic_immediate_abort",
-]
+build-std-features = ["optimize_for_size"]
 codegen-backend = true
 
 [target.'cfg(all(target_arch = "riscv32", target_os = "none"))']
@@ -13,6 +10,9 @@ rustflags = [
   "-Clink-arg=--nmagic",
   "-Clink-arg=-Tlinkall.x",
   "-Clink-arg=-Tdefmt.x",
+
+  "-Zunstable-options",
+  "-Cpanic=immediate-abort",
 ]
 
 [env]
