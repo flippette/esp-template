@@ -15,19 +15,19 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v31
       - uses: nix-community/cache-nix-action@v6
         with:
-          primary-key: >
+          primary-key: >-
             nix
             -${{ github.ref_name }}
             -${{ matrix.target }}
             -${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
-          restore-prefixes-first-match: >
+          restore-prefixes-first-match: >-
             nix
             -${{ github.ref_name }}
             -${{ matrix.target }}
             -
           gc-max-store-size: 1G
           purge: true
-          purge-prefixes: >
+          purge-prefixes: >-
             nix
             -${{ github.ref_name }}
             -${{ matrix.target }}
@@ -41,19 +41,19 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v31
       - uses: nix-community/cache-nix-action@v6
         with:
-          primary-key: >
+          primary-key: >-
             nix
             -${{ github.ref_name }}
             -c6
             -${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
-          restore-prefixes-first-match: >
+          restore-prefixes-first-match: >-
             nix
             -${{ github.ref_name }}
             -c6
             -
           save: false
           purge: true
-          purge-prefixes: >
+          purge-prefixes: >-
             nix
             -${{ github.ref_name }}
             -c6
