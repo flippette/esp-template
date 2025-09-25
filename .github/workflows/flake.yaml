@@ -29,10 +29,9 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v31
       - uses: nix-community/cache-nix-action@v6
         with:
-          primary-key: nix-${{ github.ref_name }}-c6-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
-          restore-prefixes-first-match: nix-${{ github.ref_name }}-c6-
-          save: false
+          primary-key: nix-${{ github.ref_name }}-audit-${{ hashFiles('**/*.nix', '**/flake.lock', '**/Cargo.lock') }}
+          restore-prefixes-first-match: nix-${{ github.ref_name }}-audit-
           purge: true
-          purge-prefixes: nix-${{ github.ref_name }}-c6-
+          purge-prefixes: nix-${{ github.ref_name }}-audit-
           purge-primary-key: "never"
       - run: nix flake check
