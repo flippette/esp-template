@@ -3,6 +3,8 @@
 opinionated bare-metal async Rust template for the ESP32-C3/C6, or about 550
 lines of code I was going to write anyway.
 
+p/s: i love ur mom
+
 ## portability
 
 this template can be built for both the C3 and C6:
