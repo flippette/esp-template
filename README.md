@@ -59,3 +59,4 @@ to use the version of `esp-hal` currently published on `crates.io`, use the
 `esp-hal` is going to hit `1.0.0-rc.1` _Soon™_. in the meantime, if you want to
 use `esp-hal` straight from `git`, use the `esp-hal-git` branch of this
 template; it will be kept mostly up-to-date with the `main` branch of `esp-hal`.
+ojdfowjeroj
