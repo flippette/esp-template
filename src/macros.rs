@@ -14,7 +14,7 @@ pub macro main {
     ) $(-> $return_ty:ty)?
     $body:block
   ) => {
-    #[::esp_hal_embassy::main]
+    #[::esp_rtos::main]
     $vis async fn main(spawner: ::embassy_executor::Spawner) {
       $(#[$attr])*
       async fn $name($spawner: $spawner_ty) $(-> $return_ty)?

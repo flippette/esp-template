@@ -9,15 +9,15 @@ esp32c3 = [
   "esp-backtrace/esp32c3",
   "esp-bootloader-esp-idf/esp32c3",
   "esp-hal/esp32c3",
-  "esp-hal-embassy/esp32c3",
   "esp-println/esp32c3",
+  "esp-rtos/esp32c3",
 ]
 esp32c6 = [
   "esp-backtrace/esp32c6",
   "esp-bootloader-esp-idf/esp32c6",
   "esp-hal/esp32c6",
-  "esp-hal-embassy/esp32c6",
   "esp-println/esp32c6",
+  "esp-rtos/esp32c6",
 ]
 
 [dependencies]
@@ -31,23 +31,24 @@ features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
+rev = "ad71da3183c31d522653e2c55a862e145bbab083"
 features = ["defmt", "panic-handler"]
 
 [dependencies.esp-bootloader-esp-idf]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
+rev = "ad71da3183c31d522653e2c55a862e145bbab083"
 
 [dependencies.esp-hal]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
+rev = "ad71da3183c31d522653e2c55a862e145bbab083"
 features = ["unstable"]
-
-[dependencies.esp-hal-embassy]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
 
 [dependencies.esp-println]
 git = "https://github.com/esp-rs/esp-hal.git"
-rev = "c700b8bda30e8f56cba96b90fcfe021946191f26"
+rev = "ad71da3183c31d522653e2c55a862e145bbab083"
 features = ["defmt-espflash"]
+
+[dependencies.esp-rtos]
+git = "https://github.com/esp-rs/esp-hal.git"
+rev = "ad71da3183c31d522653e2c55a862e145bbab083"
+features = ["embassy"]
