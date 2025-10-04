@@ -22,8 +22,11 @@ esp32c6 = [
 
 [dependencies]
 defmt = "1"
-embassy-executor = "0.9"
 static_cell = "2"
+
+[dependencies.embassy-executor]
+version = "0.9"
+features = ["defmt"]
 
 [dependencies.embassy-time]
 version = "0.5"
