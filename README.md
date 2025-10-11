@@ -11,8 +11,8 @@ this template can be built for both the C3 and C6:
 - use `just b3` to build for C3, and `just b6` to build for C6.
 - use `just c3` to run Clippy for C3, and `just c6` to run Clippy for C6.
 
-the Justfile recipes automatically set the required build target, crate
-features, and the `ESP_HAL_CONFIG_FLIP_LINK` environment variable for the C6.
+the Justfile recipes automatically set the required build target and crate
+features.
 
 ## Nix
 

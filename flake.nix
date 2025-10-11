@@ -53,6 +53,8 @@
               + "/lib/rustlib/src/rust/library/Cargo.lock")
           ];
         };
+
+        ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
       };
     in {
       devShells.default = pkgs.mkShell {
@@ -79,8 +81,6 @@
               "--target riscv32imac-unknown-none-elf"
               "--features esp32c6"
             ];
-
-            ESP_HAL_CONFIG_FLIP_LINK = "true";
           });
       };
 

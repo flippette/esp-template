@@ -1,5 +1,6 @@
 default_job = "clippy3"
 env.CARGO_TERM_COLOR = "always"
+env.ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true"
 
 [jobs.clippy3]
 command = [
@@ -21,7 +22,6 @@ command = [
   "--target",
   "riscv32imac-unknown-none-elf",
 ]
-env.ESP_HAL_CONFIG_FLIP_LINK = "1"
 need_stdout = false
 
 [jobs.run3]
