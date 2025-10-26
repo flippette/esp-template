@@ -22,6 +22,7 @@ esp32c6 = [
 
 [dependencies]
 defmt = "1"
+esp-bootloader-esp-idf = "0.3"
 static_cell = "2"
 
 [dependencies.embassy-executor]
@@ -33,25 +34,17 @@ version = "0.5"
 features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "00e6f28315ceb791278305f8f3645eb74ba7c34e"
+version = "0.18"
 features = ["defmt", "panic-handler"]
 
-[dependencies.esp-bootloader-esp-idf]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "00e6f28315ceb791278305f8f3645eb74ba7c34e"
-
 [dependencies.esp-hal]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "00e6f28315ceb791278305f8f3645eb74ba7c34e"
+version = "1.0.0-rc.1"
 features = ["unstable"]
 
 [dependencies.esp-println]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "00e6f28315ceb791278305f8f3645eb74ba7c34e"
+version = "0.16"
 features = ["defmt-espflash"]
 
 [dependencies.esp-rtos]
-git = "https://github.com/esp-rs/esp-hal.git"
-rev = "00e6f28315ceb791278305f8f3645eb74ba7c34e"
+version = "0.1"
 features = ["embassy"]
