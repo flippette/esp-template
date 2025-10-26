@@ -58,11 +58,11 @@
       };
     in {
       devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          cargo-binutils
-          cargo-bloat
-          espflash
-          just
+        packages = [
+          pkgs.cargo-binutils
+          pkgs.cargo-bloat
+          pkgs.espflash
+          pkgs.just
           rust
         ];
       };
