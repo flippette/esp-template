@@ -4,26 +4,25 @@
 ///
 /// the function this attribute is applied on must:
 /// - not be generic
-/// - take exactly one argument of type [`embassy_executor::Spawner`].
-/// - return some type that can be used with [`defmt::unwrap`].
+/// - take exactly one _named_ argument of type [`embassy_executor::Spawner`].
+/// - return some type that implements [`crate::error::Force`].
 pub macro main {
   attr() (
     $(#[$attr:meta])*
     $vis:vis async fn $name:ident(
       $spawner:ident: $spawner_ty:ty $(,)?
-    ) -> $return_ty:ty
+    ) $(-> $return_ty:ty)?
     $body:block
   ) => {
-    #[::esp_hal_embassy::main]
+    #[::esp_rtos::main]
     $vis async fn main(spawner: ::embassy_executor::Spawner) {
       $(#[$attr])*
-      async fn $name($spawner: $spawner_ty) -> $return_ty
+      async fn $name($spawner: $spawner_ty) $(-> $return_ty)?
         $body
 
-      #[allow(unreachable_code)] {
-        ::defmt::unwrap!($name(spawner).await);
-        ::defmt::info!("main exited!");
-      }
+      #[allow(unreachable_code)]
+      $crate::error::Force::force($name(spawner).await);
+      ::defmt::info!("main exited!");
     }
   }
 }

@@ -1,9 +1,6 @@
 [unstable]
 build-std = ["core", "alloc", "panic_abort"]
-build-std-features = [
-  "optimize_for_size",
-  "panic_immediate_abort",
-]
+build-std-features = ["optimize_for_size"]
 codegen-backend = true
 
 [target.'cfg(all(target_arch = "riscv32", target_os = "none"))']
@@ -11,13 +8,16 @@ runner = "espflash flash -B 115200 -M -L defmt"
 rustflags = [
   "-Cforce-frame-pointers=yes",
   "-Clink-arg=--nmagic",
-  "-Clink-arg=-Tdefmt.x",
   "-Clink-arg=-Tlinkall.x",
+  "-Clink-arg=-Tdefmt.x",
+
+  "-Zunstable-options",
+  "-Cpanic=immediate-abort",
 ]
 
 [env]
 DEFMT_LOG = "esp_template=info"
-# ESP_WIFI_CONFIG_COUNTRY_CODE = ""
+ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true"
 
 [profile.dev]
 opt-level = "s"
