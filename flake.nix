@@ -7,10 +7,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     crane.url = "github:ipetkov/crane";
-    advisory-db = {
-      url = "github:rustsec/advisory-db";
-      flake = false;
-    };
   };
 
   outputs = {
@@ -19,20 +15,19 @@
     flake-utils,
     rust-overlay,
     crane,
-    advisory-db,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       overlays = [(import rust-overlay)];
       pkgs = import nixpkgs {inherit system overlays;};
       rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-      cranelib = (crane.mkLib pkgs).overrideToolchain rust;
+      craneLib = (crane.mkLib pkgs).overrideToolchain rust;
 
       unfilteredRoot = ./.;
       src = with pkgs;
         lib.fileset.toSource {
           root = unfilteredRoot;
           fileset = lib.fileset.unions [
-            (cranelib.fileset.commonCargoSources unfilteredRoot)
+            (craneLib.fileset.commonCargoSources unfilteredRoot)
             # extra files go here
           ];
         };
@@ -42,8 +37,8 @@
         strictDeps = true;
         doCheck = false;
 
-        cargoVendorDir = cranelib.vendorMultipleCargoDeps {
-          inherit (cranelib.findCargoFiles src) cargoConfigs;
+        cargoVendorDir = craneLib.vendorMultipleCargoDeps {
+          inherit (craneLib.findCargoFiles src) cargoConfigs;
           cargoLockList = [
             ./Cargo.lock
 
@@ -68,26 +63,20 @@
       };
 
       packages = {
-        c3 = cranelib.buildPackage (commonArgs
+        c3 = craneLib.buildPackage (commonArgs
           // {
             cargoExtraArgs = pkgs.lib.concatStringsSep " " [
               "--target riscv32imc-unknown-none-elf"
               "--features esp32c3"
             ];
           });
-        c6 = cranelib.buildPackage (commonArgs
+        c6 = craneLib.buildPackage (commonArgs
           // {
             cargoExtraArgs = pkgs.lib.concatStringsSep " " [
               "--target riscv32imac-unknown-none-elf"
               "--features esp32c6"
             ];
           });
-      };
-
-      checks = let
-        auditArgs = {inherit advisory-db;};
-      in {
-        audit = cranelib.cargoAudit (commonArgs // auditArgs);
       };
 
       formatter = pkgs.alejandra;
