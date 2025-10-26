@@ -20,7 +20,7 @@ jobs:
           purge: true
           purge-prefixes: nix-${{ github.ref_name }}-${{ matrix.target }}-
           purge-primary-key: "never"
-      - run: nix build .#${{ matrix.target }}
+      - run: nix build -L .#${{ matrix.target }}
   audit:
     runs-on: ubuntu-latest
     steps:
@@ -33,4 +33,4 @@ jobs:
           purge: true
           purge-prefixes: nix-${{ github.ref_name }}-audit-
           purge-primary-key: "never"
-      - run: nix flake check
+      - run: nix flake check -L
