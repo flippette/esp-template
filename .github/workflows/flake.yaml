@@ -20,5 +20,5 @@ jobs:
           purge: true
           purge-prefixes: nix-${{ github.ref_name }}-${{ matrix.target }}-
           purge-primary-key: "never"
-      - run: nix build -L .#checks.clippy-${{ matrix.target }}
+      - run: nix build -L .#checks.x86_64-linux.clippy-${{ matrix.target }}
       - run: nix build -L .#${{ matrix.target }}
