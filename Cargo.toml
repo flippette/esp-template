@@ -22,7 +22,7 @@ esp32c6 = [
 
 [dependencies]
 defmt = "1"
-esp-bootloader-esp-idf = "0.3"
+esp-bootloader-esp-idf = "0.4"
 static_cell = "2"
 
 [dependencies.embassy-executor]
@@ -38,7 +38,7 @@ version = "0.18"
 features = ["defmt", "panic-handler"]
 
 [dependencies.esp-hal]
-version = "1.0.0-rc.1"
+version = "1"
 features = ["unstable"]
 
 [dependencies.esp-println]
@@ -46,5 +46,5 @@ version = "0.16"
 features = ["defmt-espflash"]
 
 [dependencies.esp-rtos]
-version = "0.1"
+version = "0.2"
 features = ["embassy"]
