@@ -51,6 +51,26 @@
 
         ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
       };
+
+      c3Args =
+        commonArgs
+        // {
+          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+            "--target riscv32imc-unknown-none-elf"
+            "--features esp32c3"
+          ];
+        };
+      c6Args =
+        commonArgs
+        // {
+          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
+            "--target riscv32imac-unknown-none-elf"
+            "--features esp32c6"
+          ];
+        };
+
+      artifacts-c3 = craneLib.buildDepsOnly c3Args;
+      artifacts-c6 = craneLib.buildDepsOnly c6Args;
     in {
       devShells.default = pkgs.mkShell {
         packages = [
@@ -63,20 +83,13 @@
       };
 
       packages = {
-        c3 = craneLib.buildPackage (commonArgs
-          // {
-            cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-              "--target riscv32imc-unknown-none-elf"
-              "--features esp32c3"
-            ];
-          });
-        c6 = craneLib.buildPackage (commonArgs
-          // {
-            cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-              "--target riscv32imac-unknown-none-elf"
-              "--features esp32c6"
-            ];
-          });
+        c3 = craneLib.buildPackage (c3Args // {cargoArtifacts = artifacts-c3;});
+        c6 = craneLib.buildPackage (c6Args // {cargoArtifacts = artifacts-c6;});
+      };
+
+      checks = {
+        clippy-c3 = craneLib.cargoClippy (c3Args // {cargoArtifacts = artifacts-c3;});
+        clippy-c6 = craneLib.cargoClippy (c6Args // {cargoArtifacts = artifacts-c6;});
       };
 
       formatter = pkgs.alejandra;
