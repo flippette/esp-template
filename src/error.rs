@@ -3,7 +3,7 @@
 use defmt::{Format, Str, unwrap};
 use embassy_executor::SpawnError;
 
-crate::macros::error! {
+crate::error! {
   /// common error type.
   pub enum Error {
     AdHoc(Str)        => "ad-hoc error: {}",

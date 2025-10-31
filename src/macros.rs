@@ -6,7 +6,8 @@
 /// - not be generic
 /// - take exactly one _named_ argument of type [`embassy_executor::Spawner`].
 /// - return some type that implements [`crate::error::Force`].
-pub macro main {
+#[macro_export]
+macro_rules! main {
   attr() (
     $(#[$attr:meta])*
     $vis:vis async fn $name:ident(
@@ -36,7 +37,8 @@ pub macro main {
 /// unfortunately, you can't put any attributes on variants (including doc
 /// comments) other than `#[format(_)]`; this restriction may be lifted if the
 /// macro is converted to be a proc macro in the future.
-pub macro error {
+#[macro_export]
+macro_rules! error {
   (
     $(#[$attr:meta])*
     $vis:vis enum $name:ident {
@@ -71,7 +73,7 @@ pub macro error {
         match self {
           $(
             $(#[cfg($cfg)])*
-            Self::$var(_inner) => $crate::macros::error!(
+            Self::$var(_inner) => $crate::error!(
               @priv @format_impl $(#[format($format)])?
               $var(_inner) => f, $fmt
             )
@@ -79,20 +81,20 @@ pub macro error {
         }
       }
     }
-  },
+  };
 
   // format string with one argument
   (@priv @format_impl
     $var:ident ($inner:expr) => $w:expr, $fmt:literal $(,)?
-  ) => { ::defmt::write!($w, $fmt, $inner) },
+  ) => { ::defmt::write!($w, $fmt, $inner) };
   // format string with no arguments
   (@priv @format_impl
     #[format(lit)] $var:ident ($inner:expr) => $w:expr, $msg:literal $(,)?
-  ) => { ::defmt::write!($w, $msg) },
+  ) => { ::defmt::write!($w, $msg) };
   // format function (impl Fn(::defmt::Formatter<'_>, $inner) -> ())
   (@priv @format_impl
     #[format(fun)] $var:ident ($inner:expr) => $w:expr, $fmt:expr $(,)?
-  ) => { $fmt($w, $inner) },
+  ) => { $fmt($w, $inner) };
 }
 
 /// get a `&'static mut T`.
@@ -105,18 +107,19 @@ pub macro error {
 ///   non-`const` initial value.
 ///
 /// all variants support passing additional attributes at the beginning.
-pub macro make_static {
+#[macro_export]
+macro_rules! make_static {
   ($(#[$m:meta])* const $type:ty = $val:expr) => {{
     $(#[$m])*
     static __CELL: ::static_cell::ConstStaticCell<$type> =
       ::static_cell::ConstStaticCell::new($val);
     __CELL.take()
-  }},
+  }};
 
   ($(#[$m:meta])* $type:ty = $val:expr) => {{
     $(#[$m])*
     static __CELL: ::static_cell::StaticCell<$type> =
       ::static_cell::StaticCell::new();
     __CELL.uninit().write($val)
-  }},
+  }};
 }
