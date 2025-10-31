@@ -88,8 +88,16 @@
       };
 
       checks = {
-        clippy-c3 = craneLib.cargoClippy (c3Args // {cargoArtifacts = artifacts-c3;});
-        clippy-c6 = craneLib.cargoClippy (c6Args // {cargoArtifacts = artifacts-c6;});
+        clippy-c3 = craneLib.cargoClippy (c3Args
+          // {
+            cargoArtifacts = artifacts-c3;
+            cargoClippyExtraArgs = "";
+          });
+        clippy-c6 = craneLib.cargoClippy (c6Args
+          // {
+            cargoArtifacts = artifacts-c6;
+            cargoClippyExtraArgs = "";
+          });
       };
 
       formatter = pkgs.alejandra;
