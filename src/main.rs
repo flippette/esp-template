@@ -14,7 +14,7 @@ use {esp_backtrace as _, esp_println as _};
 esp_bootloader_esp_idf::esp_app_desc!();
 
 #[main]
-async fn main(s: Spawner) -> Result<(), Error> {
+async fn main(_s: Spawner) -> Result<(), Error> {
   let p = esp_hal::init(<_>::default());
   info!("hal init!");
 
