@@ -20,7 +20,7 @@ the Nix flake exports 4 outputs: a dev shell, some checks, and 2 packages, one
 for each chip.
 
 the dev shell contains common utilities for development: the Rust toolchain,
-`cargo-binutils`, `cargo-bloat`, `espflash`, and `just`.
+`bacon`, `cargo-binutils`, `cargo-bloat`, `espflash`, and `just`.
 
 building the package generates an ELF binary, which can be converted into a
 flat firmware image using `espflash` and flashed onto a module.
