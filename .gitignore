@@ -1,7 +1,9 @@
-# personal env
+# direnv
 /.direnv/
-/.envrc
 
-# build artifacts
+# pre-commit
+/.pre-commit-config.yaml
+
+# artifacts
 /target/
 /result

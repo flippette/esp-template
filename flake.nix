@@ -1,105 +1,125 @@
 {
   inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
+    git-hooks-nix.url = "github:cachix/git-hooks.nix";
+    git-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
     crane.url = "github:ipetkov/crane";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    rust-overlay,
-    crane,
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      overlays = [(import rust-overlay)];
-      pkgs = import nixpkgs {inherit system overlays;};
-      rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-      craneLib = (crane.mkLib pkgs).overrideToolchain rust;
+  outputs = {flake-parts, ...} @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
 
-      unfilteredRoot = ./.;
-      src = with pkgs;
-        lib.fileset.toSource {
-          root = unfilteredRoot;
-          fileset = lib.fileset.unions [
-            (craneLib.fileset.commonCargoSources unfilteredRoot)
-            # extra files go here
+      imports = [
+        inputs.git-hooks-nix.flakeModule
+      ];
+
+      perSystem = {
+        self',
+        config,
+        system,
+        pkgs,
+        ...
+      }: {
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          overlays = [
+            inputs.rust-overlay.overlays.default
+            (final: _: {
+              # toolchain for builds
+              rust-build =
+                final.rust-bin.fromRustupToolchainFile
+                ./rust-toolchain.toml;
+
+              # toolchain for development
+              rust-dev = final.rust-build.override (prev: {
+                extensions = final.lib.unique (prev.extensions
+                  ++ [
+                    "clippy"
+                    "llvm-tools"
+                    "rust-analyzer"
+                    "rustfmt"
+                  ]);
+              });
+            })
           ];
         };
 
-      commonArgs = {
-        inherit src;
-        strictDeps = true;
-        doCheck = false;
+        pre-commit = {
+          check.enable = true;
+          settings.package = pkgs.prek;
+          settings.hooks = {
+            alejandra.enable = true;
 
-        cargoVendorDir = craneLib.vendorMultipleCargoDeps {
-          inherit (craneLib.findCargoFiles src) cargoConfigs;
-          cargoLockList = [
-            ./Cargo.lock
+            rustfmt = {
+              enable = true;
+              packageOverrides.cargo = pkgs.rust-dev;
+              packageOverrides.rustfmt = pkgs.rust-dev;
+            };
 
-            # needed for `-Z build-std`
-            # <https://crane.dev/examples/build-std.html>
-            ("${rust.passthru.availableComponents.rust-src}"
-              + "/lib/rustlib/src/rust/library/Cargo.lock")
-          ];
+            taplo.enable = true;
+          };
         };
 
-        ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
-      };
+        devShells.default = let
+          esp32c3-dev =
+            self'.packages.esp32c3.override
+            {toolchain = pkgs.rust-dev;};
 
-      c3Args =
-        commonArgs
-        // {
-          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-            "--target riscv32imc-unknown-none-elf"
-            "--features esp32c3"
-          ];
+          esp32c6-dev =
+            self'.packages.esp32c6.override
+            {toolchain = pkgs.rust-dev;};
+        in
+          pkgs.mkShell {
+            inputsFrom = [
+              config.pre-commit.devShell
+              esp32c3-dev
+              esp32c6-dev
+            ];
+
+            packages = with pkgs; [
+              bacon
+              cargo-binutils
+              cargo-bloat
+              espflash
+              just
+            ];
+
+            shellHook = ''
+              ${config.pre-commit.shellHook}
+            '';
+          };
+
+        packages = let
+          craneLib =
+            inputs.crane.mkLib
+            pkgs;
+        in {
+          esp32c3 =
+            pkgs.callPackage
+            ./nix/package.nix {
+              inherit craneLib;
+              mcuFeature = "esp32c3";
+              mcuTarget = "riscv32imc-unknown-none-elf";
+            };
+          esp32c6 =
+            pkgs.callPackage
+            ./nix/package.nix {
+              inherit craneLib;
+              mcuFeature = "esp32c6";
+              mcuTarget = "riscv32imac-unknown-none-elf";
+            };
         };
-      c6Args =
-        commonArgs
-        // {
-          cargoExtraArgs = pkgs.lib.concatStringsSep " " [
-            "--target riscv32imac-unknown-none-elf"
-            "--features esp32c6"
-          ];
-        };
-
-      artifacts-c3 = craneLib.buildDepsOnly c3Args;
-      artifacts-c6 = craneLib.buildDepsOnly c6Args;
-    in {
-      devShells.default = pkgs.mkShell {
-        packages = [
-          pkgs.cargo-binutils
-          pkgs.cargo-bloat
-          pkgs.espflash
-          pkgs.just
-          rust
-        ];
       };
-
-      packages = {
-        c3 = craneLib.buildPackage (c3Args // {cargoArtifacts = artifacts-c3;});
-        c6 = craneLib.buildPackage (c6Args // {cargoArtifacts = artifacts-c6;});
-      };
-
-      checks = {
-        clippy-c3 = craneLib.cargoClippy (c3Args
-          // {
-            cargoArtifacts = artifacts-c3;
-            cargoClippyExtraArgs = "";
-          });
-        clippy-c6 = craneLib.cargoClippy (c6Args
-          // {
-            cargoArtifacts = artifacts-c6;
-            cargoClippyExtraArgs = "";
-          });
-      };
-
-      formatter = pkgs.alejandra;
-    });
+    };
 }
