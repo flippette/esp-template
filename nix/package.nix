@@ -12,6 +12,8 @@
   craneLib' = craneLib.overrideToolchain toolchain;
 
   args = {
+    # ===== core attrs =====
+
     src = lib.fileset.toSource rec {
       root = ../.;
       fileset = lib.fileset.unions [
@@ -44,12 +46,14 @@
       "--features ${mcuFeature}"
     ];
 
-    # by default this is set to `--all-targets`, which builds tests.
-    cargoClippyExtraArgs = "";
-
     cargoArtifacts = craneLib'.buildDepsOnly args;
 
     ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
+
+    # ===== cargo clippy =====
+
+    # by default this is set to `--all-targets`, which builds tests.
+    cargoClippyExtraArgs = "";
   };
 in {
   build = craneLib'.buildPackage args;
