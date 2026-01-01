@@ -1,0 +1,10 @@
+builds:
+  include:
+    # only run pre-commit hooks once
+    - checks.x86_64-linux.pre-commit
+    # run build on all systems
+    - packages.*.esp32c3
+    - packages.*.esp32c6
+    # run checks on all systems
+    - checks.*.clippy-c3
+    - checks.*.clippy-c6
