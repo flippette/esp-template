@@ -6,5 +6,5 @@ builds:
     - packages.*.esp32c3
     - packages.*.esp32c6
     # run checks on all systems
-    - checks.*.clippy-c3
-    - checks.*.clippy-c6
+    - checks.*.clippy-esp32c3
+    - checks.*.clippy-esp32c6
