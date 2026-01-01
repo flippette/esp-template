@@ -30,7 +30,19 @@
         system,
         pkgs,
         ...
-      }: {
+      }: let
+        craneLib = inputs.crane.mkLib pkgs;
+        esp32c3 = pkgs.callPackage ./nix/package.nix {
+          inherit craneLib;
+          mcuFeature = "esp32c3";
+          mcuTarget = "riscv32imc-unknown-none-elf";
+        };
+        esp32c6 = pkgs.callPackage ./nix/package.nix {
+          inherit craneLib;
+          mcuFeature = "esp32c6";
+          mcuTarget = "riscv32imac-unknown-none-elf";
+        };
+      in {
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           overlays = [
@@ -72,19 +84,18 @@
         };
 
         devShells.default = let
-          esp32c3-dev =
-            self'.packages.esp32c3.override
-            {toolchain = pkgs.rust-dev;};
-
-          esp32c6-dev =
-            self'.packages.esp32c6.override
-            {toolchain = pkgs.rust-dev;};
+          esp32c3-dev = esp32c3.override {
+            toolchain = pkgs.rust-dev;
+          };
+          esp32c6-dev = esp32c6.override {
+            toolchain = pkgs.rust-dev;
+          };
         in
           pkgs.mkShell {
             inputsFrom = [
               config.pre-commit.devShell
-              esp32c3-dev
-              esp32c6-dev
+              esp32c3-dev.build
+              esp32c6-dev.build
             ];
 
             packages = with pkgs; [
@@ -100,26 +111,11 @@
             '';
           };
 
-        packages = let
-          craneLib =
-            inputs.crane.mkLib
-            pkgs;
-        in {
-          esp32c3 =
-            pkgs.callPackage
-            ./nix/package.nix {
-              inherit craneLib;
-              mcuFeature = "esp32c3";
-              mcuTarget = "riscv32imc-unknown-none-elf";
-            };
-          esp32c6 =
-            pkgs.callPackage
-            ./nix/package.nix {
-              inherit craneLib;
-              mcuFeature = "esp32c6";
-              mcuTarget = "riscv32imac-unknown-none-elf";
-            };
-        };
+        packages.esp32c3 = esp32c3.build;
+        packages.esp32c6 = esp32c6.build;
+
+        checks.clippy-esp32c3 = esp32c3.clippy;
+        checks.clippy-esp32c6 = esp32c6.clippy;
       };
     };
 }

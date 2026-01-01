@@ -9,11 +9,9 @@
   mcuTarget,
   ...
 }: let
-  craneLib' =
-    craneLib.overrideToolchain
-    toolchain;
-in
-  craneLib'.buildPackage rec {
+  craneLib' = craneLib.overrideToolchain toolchain;
+
+  args = {
     src = lib.fileset.toSource rec {
       root = ../.;
       fileset = lib.fileset.unions [
@@ -27,7 +25,7 @@ in
 
     cargoVendorDir = craneLib'.vendorMultipleCargoDeps {
       inherit
-        (craneLib'.findCargoFiles src)
+        (craneLib'.findCargoFiles args.src)
         cargoConfigs
         ;
 
@@ -46,5 +44,14 @@ in
       "--features ${mcuFeature}"
     ];
 
+    # by default this is set to `--all-targets`, which builds tests.
+    cargoClippyExtraArgs = "";
+
+    cargoArtifacts = craneLib'.buildDepsOnly args;
+
     ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
-  }
+  };
+in {
+  build = craneLib'.buildPackage args;
+  clippy = craneLib'.cargoClippy args;
+}
