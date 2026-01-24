@@ -12,13 +12,12 @@
   craneLib' = craneLib.overrideToolchain toolchain;
 
   args = {
-    # ===== core attrs =====
-
+    # clean sources to avoid unneeded rebuilds.
     src = lib.fileset.toSource rec {
       root = ../.;
       fileset = lib.fileset.unions [
         (craneLib'.fileset.commonCargoSources root)
-        # extra files go here
+        # extra files go here.
       ];
     };
 
@@ -41,21 +40,22 @@
       ];
     };
 
+    # set MCU target and feature flags.
     cargoExtraArgs = lib.concatStringsSep " " [
       "--target ${mcuTarget}"
       "--features ${mcuFeature}"
     ];
 
+    # clear this out, otherwise crane will try to run tests.
+    cargoClippyExtraArgs = "";
+
+    # build dependencies separately to speed up rebuilds.
     cargoArtifacts = craneLib'.buildDepsOnly args;
 
-    ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
-
-    # ===== cargo clippy =====
-
-    # by default this is set to `--all-targets`, which builds tests.
-    cargoClippyExtraArgs = "";
+    # prevent UB from stack overflows.
+    env.ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
   };
 in {
-  build = craneLib'.buildPackage args;
+  package = craneLib'.buildPackage args;
   clippy = craneLib'.cargoClippy args;
 }

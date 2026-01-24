@@ -94,8 +94,8 @@
           pkgs.mkShell {
             inputsFrom = [
               config.pre-commit.devShell
-              esp32c3-dev.build
-              esp32c6-dev.build
+              esp32c3-dev.package
+              esp32c6-dev.package
             ];
 
             packages = with pkgs; [
@@ -111,8 +111,8 @@
             '';
           };
 
-        packages.esp32c3 = esp32c3.build;
-        packages.esp32c6 = esp32c6.build;
+        packages.esp32c3 = esp32c3.package;
+        packages.esp32c6 = esp32c6.package;
 
         checks.clippy-esp32c3 = esp32c3.clippy;
         checks.clippy-esp32c6 = esp32c6.clippy;
