@@ -66,9 +66,9 @@
           ];
         };
 
-        pre-commit = {
+        pre-commit = with pkgs; {
           check.enable = true;
-          settings.package = pkgs.prek;
+          settings.package = prek;
           settings.hooks = {
             alejandra.enable = true;
             deadnix.enable = true;
@@ -77,8 +77,8 @@
 
             rustfmt = {
               enable = true;
-              packageOverrides.cargo = pkgs.rust-dev;
-              packageOverrides.rustfmt = pkgs.rust-dev;
+              packageOverrides.cargo = rust-dev;
+              packageOverrides.rustfmt = rust-dev;
             };
           };
         };
