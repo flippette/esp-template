@@ -25,7 +25,6 @@
       ];
 
       perSystem = {
-        self',
         config,
         system,
         pkgs,
@@ -72,14 +71,15 @@
           settings.package = pkgs.prek;
           settings.hooks = {
             alejandra.enable = true;
+            deadnix.enable = true;
+            statix.enable = true;
+            taplo.enable = true;
 
             rustfmt = {
               enable = true;
               packageOverrides.cargo = pkgs.rust-dev;
               packageOverrides.rustfmt = pkgs.rust-dev;
             };
-
-            taplo.enable = true;
           };
         };
 
