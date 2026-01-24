@@ -2,6 +2,7 @@
 build-std = ["core", "alloc", "panic_abort"]
 build-std-features = ["optimize_for_size"]
 codegen-backend = true
+panic-immediate-abort = true
 
 [target.'cfg(all(target_arch = "riscv32", target_os = "none"))']
 runner = "espflash flash -B 115200 -M -L defmt"
@@ -10,9 +11,6 @@ rustflags = [
   "-Clink-arg=--nmagic",
   "-Clink-arg=-Tlinkall.x",
   "-Clink-arg=-Tdefmt.x",
-
-  "-Zunstable-options",
-  "-Cpanic=immediate-abort",
 ]
 
 [env]
@@ -22,7 +20,7 @@ ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true"
 [profile.dev]
 opt-level = "s"
 codegen-backend = "llvm"
-panic = "abort"
+panic = "immediate-abort"
 strip = false
 debug = true
 
@@ -30,7 +28,7 @@ debug = true
 opt-level = "s"
 codegen-units = 1
 codegen-backend = "llvm"
-panic = "abort"
+panic = "immediate-abort"
 strip = false
 debug = true
 lto = true
