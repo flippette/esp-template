@@ -24,7 +24,3 @@ the dev shell contains common utilities for development: the Rust toolchain,
 
 building the package generates an ELF binary, which can be converted into a
 flat firmware image using `espflash` and flashed onto a module.
-
-due to an [issue](https://github.com/esp-rs/espflash/issues/935) with
-`espflash`, the package doesn't generate this flat firmware image automatically.
-this will be done in the future, once the issue is resolved.
