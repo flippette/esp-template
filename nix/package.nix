@@ -47,9 +47,6 @@
       "--features ${mcuFeature}"
     ];
 
-    # clear this out, otherwise crane will try to run tests.
-    cargoClippyExtraArgs = "";
-
     # build dependencies separately to speed up rebuilds.
     cargoArtifacts = craneLib'.buildDepsOnly args;
 
@@ -57,7 +54,11 @@
     env.ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
   };
 in {
-  clippy = craneLib'.cargoClippy args;
+  clippy = craneLib'.cargoClippy (args
+    // {
+      # otherwise Cargo complains about the `test` crate.
+      cargoClippyExtraArgs = "";
+    });
   package = craneLib'.buildPackage (args
     // {
       postInstall = ''
