@@ -103,6 +103,7 @@
               cargo-binutils
               cargo-bloat
               espflash
+              esptool
               just
             ];
 
