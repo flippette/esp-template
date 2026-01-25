@@ -1,10 +1,8 @@
 builds:
   include:
-    # only run pre-commit hooks once
-    - checks.x86_64-linux.pre-commit
-    # run build on all systems
-    - packages.*.esp32c3
-    - packages.*.esp32c6
-    # run checks on all systems
-    - checks.*.clippy-esp32c3
-    - checks.*.clippy-esp32c6
+    # run all the checks once
+    - checks.x86_64-linux.*
+    # build everything once
+    - packages.x86_64-linux.*
+    # check dev shell cross-compat
+    - devShells.*.default
