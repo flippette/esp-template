@@ -48,9 +48,6 @@
 
     # build dependencies separately to speed up rebuilds.
     cargoArtifacts = craneLib'.buildDepsOnly args;
-
-    # prevent UB from stack overflows.
-    env.ESP_HAL_CONFIG_WRITE_VEC_TABLE_MONITORING = "true";
   };
 in {
   clippy = craneLib'.cargoClippy (args
