@@ -6,9 +6,8 @@
   rust-build,
   # options
   toolchain ? rust-build,
-  mcuFeature,
-  mcuTarget,
-  ...
+  chip,
+  target,
 }: let
   craneLib' = craneLib.overrideToolchain toolchain;
 
@@ -43,8 +42,8 @@
 
     # set MCU target and feature flags.
     cargoExtraArgs = lib.concatStringsSep " " [
-      "--target ${mcuTarget}"
-      "--features ${mcuFeature}"
+      "--features ${chip}"
+      "--target ${target}"
     ];
 
     # build dependencies separately to speed up rebuilds.
@@ -64,7 +63,7 @@ in {
       postInstall = ''
         # generate a flat firmware binary (for OTA, etc.)
         ${espflash}/bin/espflash save-image \
-          --chip esp32c6 \
+          --chip ${chip} \
           $out/bin/$pname \
           $out/bin/$pname.bin
       '';

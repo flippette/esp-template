@@ -33,13 +33,13 @@
         craneLib = inputs.crane.mkLib pkgs;
         esp32c3 = pkgs.callPackage ./nix/package.nix {
           inherit craneLib;
-          mcuFeature = "esp32c3";
-          mcuTarget = "riscv32imc-unknown-none-elf";
+          chip = "esp32c3";
+          target = "riscv32imc-unknown-none-elf";
         };
         esp32c6 = pkgs.callPackage ./nix/package.nix {
           inherit craneLib;
-          mcuFeature = "esp32c6";
-          mcuTarget = "riscv32imac-unknown-none-elf";
+          chip = "esp32c6";
+          target = "riscv32imac-unknown-none-elf";
         };
       in {
         _module.args.pkgs = import inputs.nixpkgs {
