@@ -51,3 +51,6 @@ features = ["embassy"]
 
 [lints.clippy]
 mem_forget = "deny"
+
+[lints.rust]
+unsafe_code = "deny"
