@@ -11,7 +11,10 @@ crate::error! {
   }
 }
 
-/// make a [`Result`] with an [`Error::AdHoc`].
+/// make a [`Result`][result] with an [`Error::AdHoc`].
+///
+/// [result]: core::result::Result
+#[allow(rustdoc::redundant_explicit_links)]
 pub trait ToAdHocError<T> {
   fn or_adhoc(self, msg: Str) -> Result<T, Error>
   where
