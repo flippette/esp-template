@@ -66,7 +66,7 @@ in {
         ${espflash}/bin/espflash save-image \
           --chip esp32c6 \
           $out/bin/$pname \
-          $out/bin/$pname-$version.bin
+          $out/bin/$pname.bin
       '';
     });
 }
