@@ -6,7 +6,8 @@
 /// - not be generic
 /// - take exactly one _named_ argument of type
 ///   [`embassy_executor::Spawner`].
-/// - return some type that implements [`crate::error::Force`].
+/// - return some type that implements
+///   [`crate::error::Force`].
 #[macro_export]
 macro_rules! main {
   attr() (
@@ -17,10 +18,14 @@ macro_rules! main {
     $body:block
   ) => {
     #[::esp_rtos::main]
-    $vis async fn main(spawner: ::embassy_executor::Spawner) {
+    $vis async fn main(
+      spawner: ::embassy_executor::Spawner
+    ) {
       $(#[$attr])*
-      async fn $name($spawner: $spawner_ty) $(-> $return_ty)?
-        $body
+      async fn $name(
+        $spawner: $spawner_ty
+      ) $(-> $return_ty)?
+      $body
 
       #[allow(unreachable_code)]
       $crate::error::Force::force($name(spawner).await);
@@ -31,14 +36,15 @@ macro_rules! main {
 
 /// impl `From` and [`defmt::Format`] for an error enum.
 ///
-/// functions that want to return `Result<_, ()>::Err` should instead
-/// define a dedicated error type, then add it as a variant to the
-/// error enum; that way, you avoid implementing `From<()>` twice for
-/// the error enum.
+/// functions that want to return `Result<_, ()>::Err`
+/// should instead define a dedicated error type, then add
+/// it as a variant to the error enum; that way, you avoid
+/// implementing `From<()>` twice for the error enum.
 ///
-/// unfortunately, you can't put any attributes on variants (including
-/// doc comments) other than `#[format(_)]`; this restriction may be
-/// lifted if the macro is converted to be a proc macro in the future.
+/// unfortunately, you can't put any attributes on variants
+/// (including doc comments) other than `#[format(_)]`; this
+/// restriction may be lifted if the macro is converted to
+/// be a proc macro in the future.
 #[macro_export]
 macro_rules! error {
   (
@@ -87,15 +93,18 @@ macro_rules! error {
 
   // format string with one argument
   (@priv @format_impl
-    $var:ident ($inner:expr) => $w:expr, $fmt:literal $(,)?
+    $var:ident ($inner:expr)
+      => $w:expr, $fmt:literal $(,)?
   ) => { ::defmt::write!($w, $fmt, $inner) };
   // format string with no arguments
   (@priv @format_impl
-    #[format(lit)] $var:ident ($inner:expr) => $w:expr, $msg:literal $(,)?
+    #[format(lit)] $var:ident ($inner:expr)
+      => $w:expr, $msg:literal $(,)?
   ) => { ::defmt::write!($w, $msg) };
-  // format function (impl Fn(::defmt::Formatter<'_>, $inner) -> ())
+  // format function (::defmt::Formatter<'_>, $inner) -> ()
   (@priv @format_impl
-    #[format(fun)] $var:ident ($inner:expr) => $w:expr, $fmt:expr $(,)?
+    #[format(fun)] $var:ident ($inner:expr)
+      => $w:expr, $fmt:expr $(,)?
   ) => { $fmt($w, $inner) };
 }
 
@@ -104,13 +113,14 @@ macro_rules! error {
 /// there are 2 variants of this macro:
 ///
 /// - `const <type> = <expr>`: create a
-///   [`static_cell::ConstStaticCell`] with some `const` initial
-///   value.
-/// - `<type> = <expr>`: create a [`static_cell::StaticCell`] with
-///   some non-`const` initial value.
+///   [`static_cell::ConstStaticCell`] with some `const`
+///   initial value.
+/// - `<type> = <expr>`: create a
+///   [`static_cell::StaticCell`] with some non-`const`
+///   initial value.
 ///
-/// all variants support passing additional attributes at the
-/// beginning.
+/// all variants support passing additional attributes at
+/// the beginning.
 #[macro_export]
 macro_rules! make_static {
   ($(#[$m:meta])* const $type:ty = $val:expr) => {{
