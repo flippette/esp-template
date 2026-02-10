@@ -51,7 +51,7 @@ in {
     });
   package = crane.buildPackage (args
     // {
-      postInstall = ''
+      postFixup = ''
         # generate a flat firmware binary (for OTA, etc.)
         ${espflash}/bin/espflash save-image \
           --chip ${chip} \
