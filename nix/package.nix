@@ -1,41 +1,35 @@
 {
   # pkgs
   lib,
-  craneLib,
+  crane,
   espflash,
   rust-build,
   # options
-  toolchain ? rust-build,
   chip,
   target,
 }: let
-  craneLib' = craneLib.overrideToolchain toolchain;
-
   args = {
     # clean sources to avoid unneeded rebuilds.
     src = lib.fileset.toSource rec {
       root = ../.;
       fileset = lib.fileset.unions [
-        (craneLib'.fileset.commonCargoSources root)
-        # extra files go here.
+        (crane.fileset.commonCargoSources root)
+        (lib.fileset.maybeMissing ../.secrets.envrc)
       ];
     };
 
     strictDeps = true;
     doCheck = false;
 
-    cargoVendorDir = craneLib'.vendorMultipleCargoDeps {
-      inherit
-        (craneLib'.findCargoFiles args.src)
-        cargoConfigs
-        ;
+    cargoVendorDir = crane.vendorMultipleCargoDeps {
+      inherit (crane.findCargoFiles args.src) cargoConfigs;
 
       cargoLockList = [
         ../Cargo.lock
 
         # needed for `-Z build-std`
         # <https://crane.dev/examples/build-std.html>
-        ("${toolchain.passthru.availableComponents.rust-src}"
+        ("${rust-build.passthru.availableComponents.rust-src}"
           + "/lib/rustlib/src/rust/library/Cargo.lock")
       ];
     };
@@ -47,15 +41,15 @@
     ];
 
     # build dependencies separately to speed up rebuilds.
-    cargoArtifacts = craneLib'.buildDepsOnly args;
+    cargoArtifacts = crane.buildDepsOnly args;
   };
 in {
-  clippy = craneLib'.cargoClippy (args
+  clippy = crane.cargoClippy (args
     // {
       # otherwise Cargo complains about the `test` crate.
       cargoClippyExtraArgs = "";
     });
-  package = craneLib'.buildPackage (args
+  package = crane.buildPackage (args
     // {
       postInstall = ''
         # generate a flat firmware binary (for OTA, etc.)
