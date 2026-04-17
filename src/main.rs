@@ -5,10 +5,11 @@
 
 use defmt::info;
 use embassy_executor::Spawner;
+use esp_backtrace as _;
 use esp_hal::interrupt::software::SoftwareInterruptControl;
 use esp_hal::timer::timg::TimerGroup;
+use esp_println as _;
 use esp_template::prelude::*;
-use {esp_backtrace as _, esp_println as _};
 
 // required for espflash
 esp_bootloader_esp_idf::esp_app_desc!();
