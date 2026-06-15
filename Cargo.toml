@@ -38,7 +38,7 @@ version = "0.19"
 features = ["defmt", "panic-handler"]
 
 [dependencies.esp-hal]
-version = "1.1.0-rc.0"
+version = "1.1"
 features = ["unstable"]
 
 [dependencies.esp-println]
