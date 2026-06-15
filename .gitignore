@@ -4,6 +4,9 @@
 # pre-commit
 /.pre-commit-config.yaml
 
-# artifacts
-/target/
+# Nix
 /result
+/result-*
+
+# Cargo
+/target/
