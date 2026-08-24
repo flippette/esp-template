@@ -1,8 +1,0 @@
-builds:
-  include:
-    # run all the checks once
-    - checks.x86_64-linux.*
-    # build everything once
-    - packages.x86_64-linux.*
-    # check dev shell cross-compat
-    - devShells.*.default
