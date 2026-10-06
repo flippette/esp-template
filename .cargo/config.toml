@@ -17,14 +17,14 @@ rustflags = [
 DEFMT_LOG = "esp_template=info"
 
 [profile.dev]
-opt-level = "s"
+opt-level = "z"
 codegen-backend = "llvm"
 panic = "abort"
 strip = false
 debug = true
 
 [profile.release]
-opt-level = "s"
+opt-level = "z"
 codegen-units = 1
 codegen-backend = "llvm"
 panic = "abort"
