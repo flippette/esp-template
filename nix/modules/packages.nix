@@ -2,6 +2,7 @@
   perSystem = {pkgs, ...}: let
     riscv32imc = "riscv32imc-unknown-none-elf";
     riscv32imac = "riscv32imac-unknown-none-elf";
+    riscv32imafc = "riscv32imafc-unknown-none-elf";
     targets = {
       esp32c2 = riscv32imc;
       esp32c3 = riscv32imc;
@@ -9,6 +10,8 @@
       esp32c6 = riscv32imac;
       esp32c61 = riscv32imac;
       esp32h2 = riscv32imac;
+      esp32p4 = riscv32imafc;
+      esp32s31 = riscv32imafc;
     };
 
     make-esp-template = rust-toolchain:

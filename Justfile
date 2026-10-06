@@ -34,5 +34,17 @@ h2 cmd *args:
     --features esp32h2 \
     {{args}}
 
+p4 cmd *args:
+  cargo {{cmd}} \
+    --target riscv32imafc-unknown-none-elf \
+    --features esp32p4 \
+    {{args}}
+
+s31 cmd *args:
+  cargo {{cmd}} \
+    --target riscv32imafc-unknown-none-elf \
+    --features esp32s31 \
+    {{args}}
+
 cl:
   cargo clean
