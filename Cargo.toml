@@ -1,5 +1,5 @@
 [package]
-name = "esp-template"
+name    = "esp-template"
 version = "0.1.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
@@ -14,34 +14,34 @@ default = [
 ]
 
 [dependencies]
-defmt = "1"
+defmt                  = "1"
 esp-bootloader-esp-idf = "0.6"
-static_cell = "2"
+static_cell            = "2"
 
 [dependencies.embassy-executor]
-version = "0.10"
+version  = "0.10"
 features = ["defmt"]
 
 [dependencies.embassy-time]
-version = "0.5"
+version  = "0.5"
 features = ["defmt-timestamp-uptime-us"]
 
 [dependencies.esp-backtrace]
-version = "0.20"
+version  = "0.20"
 features = ["defmt", "panic-handler"]
 
 [dependencies.esp-hal]
-version = "1.2"
-features = ["unstable"]
+version  = "1.2"
+features = ["defmt", "unstable"]
 
 [dependencies.esp-println]
-version = "0.18"
+version  = "0.18"
 features = ["defmt-espflash"]
 
 [dependencies.esp-rtos]
-version = "0.4"
-features = ["embassy"]
+version  = "0.4"
+features = ["defmt", "embassy"]
 
 [lints]
 clippy.mem_forget = "deny"
-rust.unsafe_code = "deny"
+rust.unsafe_code  = "deny"
