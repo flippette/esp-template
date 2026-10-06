@@ -1,13 +1,29 @@
 {
-  "rust-analyzer": {
-    "cargo": {
-      "allFeatures": false,
-      "allTargets": false,
-      "features": ["esp32c6"],
-      "target": "riscv32imac-unknown-none-elf"
-    },
-    "check": {
-      "command": "clippy"
+  "git.autofetch": false,
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nil",
+  "nix.serverSettings": {
+    "nil": {
+      "formatting": {
+        "command": [
+          "alejandra",
+          "-q"
+        ]
+      },
+      "nix": {
+        "maxMemoryMB": 8192,
+        "flake": {
+          "autoArchive": true,
+          "autoEvalInputs": true,
+          "nixpkgsInputName": "nixpkgs"
+        }
+      }
     }
-  }
+  },
+  "rust-analyzer.cargo.allTargets": false,
+  "rust-analyzer.cargo.features": [
+    "esp32c6"
+  ],
+  "rust-analyzer.cargo.target": "riscv32imac-unknown-none-elf",
+  "rust-analyzer.check.command": "clippy",
 }
