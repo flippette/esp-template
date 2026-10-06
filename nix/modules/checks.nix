@@ -21,7 +21,7 @@
       taplo = pkgs.runCommand "taplo" {
         inherit src;
         nativeBuildInputs = [pkgs.taplo];
-      } "taplo format --check $src && touch $out";
+      } "cd $src && taplo fmt --check && touch $out";
 
       rustfmt = pkgs.runCommand "rustfmt" {
         inherit src;
