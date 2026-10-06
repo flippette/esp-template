@@ -1,24 +1,43 @@
 # esp-template
 
 opinionated bare-metal async Rust template for the RISC-V
-ESP32s, or about 650 lines of code I was going to write
-anyway.
+ESP32s.
 
-## portability
+## target configuration
 
-this template needs to be built with the correct target arch
-_and_ MCU feature enabled. the Justfile sets these
-automatically, read it for details.
+this template aims to be chip-agnostic, but since most
+projects only target one particular ESP32 variant, this is
+achieved via editing hard-coded targets and chip features.
+
+to configure this template for a given chip, there are a few
+configuration options that need to be changed:
+
+- in `.cargo/config.toml`, set `build.target` to the correct
+  target triple,
+- in `Cargo.toml`, set the correct chip name in the features
+  enabled by `features.default`,
+- in `rust-toolchain.toml`, set `targets` to the correct
+  target triple.
+
+the corresponding target triples for the supported chips are
+shown in the following table.
+
+| chip                  | target triple                   |
+| --------------------- | ------------------------------- |
+| `esp32c2`, `esp32c3`  | `riscv32imc-unknown-none-elf`   |
+| `esp32c6`, `esp32h2`  | `riscv32imac-unknown-none-elf`  |
+| `esp32p4`, `esp32s31` | `riscv32imafc-unknown-none-elf` |
+
+this template is configured for the `esp32c6` target by
+default.
 
 ## Nix
 
-the Nix flake exports a dev shell, some checks, and one
-package per MCU target.
+the Nix flake exports a dev shell, some checks, and a
+firmware `default` package.
 
-the dev shell contains common utilities for development: the
-Rust toolchain, `cargo-binutils`, `cargo-bloat`, `espflash`,
-`esptool`, and `just`.
+the dev shell contains the Rust toolchain, `cargo-binutils`,
+`cargo-bloat`, `espflash`, and `esptool`.
 
-building the package generates an ELF binary and a flat
-firmware image, the latter of which can be flashed onto a
-module.
+building the package generates an ELF binary, which can be
+flashed onto a module using `espflash`.

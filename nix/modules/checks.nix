@@ -1,33 +1,32 @@
 {
-  perSystem = {pkgs, ...}:
-    with pkgs; let
-      src = nix-gitignore.gitignoreSource [] ../../.;
-    in {
-      checks = {
-        alejandra = runCommand "alejandra" {
-          inherit src;
-          nativeBuildInputs = [alejandra];
-        } "alejandra --check $src && touch $out";
+  perSystem = {pkgs, ...}: let
+    src = ../../.;
+  in {
+    checks = {
+      alejandra = pkgs.runCommand "alejandra" {
+        inherit src;
+        nativeBuildInputs = [pkgs.alejandra];
+      } "alejandra --check $src && touch $out";
 
-        deadnix = runCommand "deadnix" {
-          inherit src;
-          nativeBuildInputs = [deadnix];
-        } "deadnix $src && touch $out";
+      deadnix = pkgs.runCommand "deadnix" {
+        inherit src;
+        nativeBuildInputs = [pkgs.deadnix];
+      } "deadnix $src && touch $out";
 
-        statix = runCommand "statix" {
-          inherit src;
-          nativeBuildInputs = [statix];
-        } "statix check $src && touch $out";
+      statix = pkgs.runCommand "statix" {
+        inherit src;
+        nativeBuildInputs = [pkgs.statix];
+      } "statix check $src && touch $out";
 
-        taplo = runCommand "taplo" {
-          inherit src;
-          nativeBuildInputs = [taplo];
-        } "taplo format --check $src && touch $out";
+      taplo = pkgs.runCommand "taplo" {
+        inherit src;
+        nativeBuildInputs = [pkgs.taplo];
+      } "taplo format --check $src && touch $out";
 
-        rustfmt = runCommand "rustfmt" {
-          inherit src;
-          nativeBuildInputs = [rust-dev];
-        } "cd $src && cargo fmt --check && touch $out";
-      };
+      rustfmt = pkgs.runCommand "rustfmt" {
+        inherit src;
+        nativeBuildInputs = [pkgs.rust-toolchain];
+      } "cd $src && cargo fmt --check && touch $out";
     };
+  };
 }

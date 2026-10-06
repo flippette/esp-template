@@ -1,8 +1,4 @@
-{
-  lib,
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   systems = [
     "aarch64-darwin"
     "aarch64-linux"
@@ -19,19 +15,13 @@
         (final: _: {
           crane = inputs.crane.mkLib final;
 
-          rust-build =
+          rust-toolchain =
             final.rust-bin.fromRustupToolchainFile
             ../../rust-toolchain.toml;
 
-          rust-dev = final.rust-build.override (prev: {
-            extensions = lib.unique (prev.extensions
-              ++ [
-                "clippy"
-                "llvm-tools"
-                "rust-analyzer"
-                "rustfmt"
-              ]);
-          });
+          rust-minimal-with-src =
+            final.rust-toolchain.override
+            {extensions = ["rust-src"];};
         })
       ];
     };

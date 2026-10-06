@@ -2,12 +2,12 @@
   lib,
   crane,
   newScope,
-  espflash,
   rust-toolchain,
-  chip,
-  target,
 }:
 lib.makeScope newScope (self: {
+  crane = crane.overrideToolchain self.rust-toolchain;
+  inherit rust-toolchain;
+
   commonArgs = {
     src = lib.fileset.toSource rec {
       root = ../.;
@@ -34,31 +34,17 @@ lib.makeScope newScope (self: {
       ];
     };
 
-    cargoExtraArgs = lib.concatStringsSep " " [
-      "--features=${self.chip}"
-      "--target=${self.target}"
-    ];
+    cargoArtifacts =
+      self.crane.buildDepsOnly self.commonArgs;
+
+    passthru = {
+      inherit (self) commonArgs crane rust-toolchain;
+    };
   };
 
-  cargoArtifacts = self.crane.buildDepsOnly self.commonArgs;
+  firmware = self.crane.buildPackage self.commonArgs;
 
-  firmware = self.crane.buildPackage (self.commonArgs
-    // {
-      inherit (self) cargoArtifacts;
-      postFixup = ''
-        ${lib.getExe self.espflash} save-image \
-          --chip=${self.chip} \
-          $out/bin/$pname \
-          $out/bin/$pname.bin
-      '';
-    });
-
-  clippy = self.crane.cargoClippy (self.commonArgs
-    // {
-      inherit (self) cargoArtifacts;
-      cargoClippyExtraArgs = "";
-    });
-
-  crane = crane.overrideToolchain self.rust-toolchain;
-  inherit espflash rust-toolchain chip target;
+  clippy =
+    self.crane.cargoClippy
+    (self.commonArgs // {cargoClippyExtraArgs = "";});
 })

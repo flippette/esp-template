@@ -8,6 +8,13 @@
       inputsFrom =
         lib.attrValues config.packages
         ++ lib.attrValues config.checks;
+
+      packages = with pkgs; [
+        cargo-binutils
+        cargo-bloat
+        espflash
+        esptool
+      ];
     };
   };
 }
