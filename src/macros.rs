@@ -27,9 +27,10 @@ macro_rules! main {
       ) $(-> $return_ty)?
       $body
 
-      #[allow(unreachable_code)]
-      $crate::error::Force::force($name(spawner).await);
-      ::defmt::info!("main exited!");
+      #[allow(unreachable_code)] {
+        $crate::error::Force::force($name(spawner).await);
+        ::defmt::info!("main exited!");
+      }
     }
   }
 }

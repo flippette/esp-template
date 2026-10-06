@@ -1,7 +1,7 @@
 //! common utilities for firmware.
 
 #![no_std]
-#![feature(macro_attr, never_type)]
+#![feature(macro_attr)]
 #![expect(unstable_features)]
 
 pub mod error;
