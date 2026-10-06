@@ -10,6 +10,7 @@ rustflags = [
   "-Clink-arg=--nmagic",
   "-Clink-arg=-Tlinkall.x",
   "-Clink-arg=-Tdefmt.x",
+  "-Ctarget-feature=+relax",
 ]
 
 [env]
