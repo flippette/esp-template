@@ -1,36 +1,33 @@
 {
-  perSystem = {pkgs, ...}: {
-    checks = {
-      esp32c2-clippy =
-        (pkgs.callPackages ../package.nix {
-          chip = "esp32c2";
-          target = "riscv32imc-unknown-none-elf";
-        }).clippy;
-      esp32c3-clippy =
-        (pkgs.callPackages ../package.nix {
-          chip = "esp32c3";
-          target = "riscv32imc-unknown-none-elf";
-        }).clippy;
-      esp32c5-clippy =
-        (pkgs.callPackages ../package.nix {
-          chip = "esp32c5";
-          target = "riscv32imac-unknown-none-elf";
-        }).clippy;
-      esp32c6-clippy =
-        (pkgs.callPackages ../package.nix {
-          chip = "esp32c6";
-          target = "riscv32imac-unknown-none-elf";
-        }).clippy;
-      esp32c61-clippy =
-        (pkgs.callPackages ../package.nix {
-          chip = "esp32c61";
-          target = "riscv32imac-unknown-none-elf";
-        }).clippy;
-      esp32h2-clippy =
-        (pkgs.callPackages ../package.nix {
-          chip = "esp32h2";
-          target = "riscv32imac-unknown-none-elf";
-        }).clippy;
+  perSystem = {pkgs, ...}:
+    with pkgs; let
+      src = nix-gitignore.gitignoreSource [] ../../.;
+    in {
+      checks = {
+        alejandra = runCommand "alejandra" {
+          inherit src;
+          nativeBuildInputs = [alejandra];
+        } "alejandra --check $src && touch $out";
+
+        deadnix = runCommand "deadnix" {
+          inherit src;
+          nativeBuildInputs = [deadnix];
+        } "deadnix $src && touch $out";
+
+        statix = runCommand "statix" {
+          inherit src;
+          nativeBuildInputs = [statix];
+        } "statix check $src && touch $out";
+
+        taplo = runCommand "taplo" {
+          inherit src;
+          nativeBuildInputs = [taplo];
+        } "taplo format --check $src && touch $out";
+
+        rustfmt = runCommand "rustfmt" {
+          inherit src;
+          nativeBuildInputs = [rust-dev];
+        } "cd $src && cargo fmt --check && touch $out";
+      };
     };
-  };
 }
